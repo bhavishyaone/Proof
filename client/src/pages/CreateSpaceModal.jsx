@@ -84,8 +84,14 @@ export default function CreateSpaceModal({ onClose }) {
             </div>
           </div>
 
-          <div className="w-full md:w-[55%] p-8 overflow-y-auto bg-white text-black text-left">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Create Space</h1>
+          <div className="w-full md:w-[55%] p-8 overflow-y-auto bg-white text-black text-left relative">
+            <button 
+              onClick={onClose}
+              className="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h1 className="text-3xl font-bold text-gray-900 mb-8 mt-2">Create Space</h1>
 
             <div className="space-y-6">
               
