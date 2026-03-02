@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Inbox, Heart, Settings, Share2, ArrowLeft, Heart as HeartOutline, Trash2, CheckCircle, XCircle, Video as VideoIcon, Archive, AlertOctagon } from "lucide-react";
+import { Search, Inbox, Heart, Settings, Share2, ArrowLeft, Heart as HeartOutline, Trash2, CheckCircle, XCircle, Video as VideoIcon, Archive, AlertOctagon ,Undo2} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -49,6 +49,10 @@ export default function SpaceInbox({ testimonials, setTestimonials }) {
 
   const handleApprove = (id) => {
     setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "approved" } : t));
+  };
+
+  const handleUnapprove = (id) => {
+    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "pending" } : t));
   };
 
   const handleReject = (id) => {
@@ -166,7 +170,7 @@ export default function SpaceInbox({ testimonials, setTestimonials }) {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">{t.email} • {t.timeAgo}</p>
+                  <p className="text-xs text-gray-500">{t.email}  {t.timeAgo}</p>
                 </div>
 
                 <StarRating rating={t.rating} />
@@ -219,10 +223,13 @@ export default function SpaceInbox({ testimonials, setTestimonials }) {
                         <XCircle className="w-4 h-4 text-[#F87171]" />
                       </button>
                     </div>
+                  ) : t.status === "approved" ? (
+                    <button onClick={() => handleUnapprove(t.id)} title="Unapprove (remove from Wall of Love)" className="w-8 h-8 rounded bg-[#1A1A1A] hover:bg-[#2A2A2A] flex items-center justify-center transition-colors group">
+                       <Undo2 className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                    </button>
                   ) : (
                     <div className="w-8 h-8 text-transparent flex items-center justify-center select-none cursor-default">
-
-                      •
+                      
                     </div>
                   )}
                 </div>
