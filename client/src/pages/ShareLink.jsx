@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Inbox, Heart, Settings, Share2, Copy, Check, Link as LinkIcon } from "lucide-react";
+import { ArrowLeft, Inbox, Heart, Edit, Share2, Copy, Check, Link as LinkIcon } from "lucide-react";
 
 export default function ShareLink() {
   const [copied, setCopied] = useState(false);
@@ -49,7 +49,7 @@ export default function ShareLink() {
 
           <nav className="space-y-1 mt-8">
              <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
-               <Settings className="w-[18px] h-[18px]" /> Space Settings
+               <Edit className="w-[18px] h-[18px]" /> Edit Space
              </button>
              <Link to="/share" className="w-full flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] text-white rounded-xl text-[15px] font-semibold transition-colors">
                <Share2 className="w-[18px] h-[18px]" /> Share Link
