@@ -14,12 +14,6 @@ export default function ShareLink() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const menuItems = [
-    { id: "inbox", label: "Inbox", icon: Inbox, path: "/inbox" },
-    { id: "wall-of-love", label: "Wall of Love", icon: Heart, path: "/wall-of-love" },
-    { id: "share", label: "Share Link", icon: Share2, path: "/share" },
-    { id: "setup", label: "Space Settings", icon: Settings, path: "/settings" },
-  ];
 
   return (
     <div className="flex h-screen bg-[#0A0A0A] font-sans text-white overflow-hidden">
@@ -48,9 +42,9 @@ export default function ShareLink() {
           </nav>
 
           <nav className="space-y-1 mt-8">
-             <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
+             <Link to="/edit-space" className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
                <Edit className="w-[18px] h-[18px]" /> Edit Space
-             </button>
+             </Link>
              <Link to="/share" className="w-full flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] text-white rounded-xl text-[15px] font-semibold transition-colors">
                <Share2 className="w-[18px] h-[18px]" /> Share Link
              </Link>
