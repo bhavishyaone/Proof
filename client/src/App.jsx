@@ -8,6 +8,7 @@ import SpaceInbox from "./pages/SpaceInbox.jsx";
 import WallOfLove from "./pages/WallOfLove.jsx";
 import PublicTestimonial from "./pages/PublicTestimonial.jsx";
 import ThankYou from "./pages/ThankYou.jsx";
+import ShareLink from "./pages/ShareLink.jsx";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="/inbox" element={<SpaceInbox testimonials={testimonials} setTestimonials={setTestimonials} />} />
           <Route path="/wall-of-love" element={<WallOfLove testimonials={testimonials} />} />
           <Route path="/thank-you" element={<ThankYou />} />
+          <Route path="/share" element={<ShareLink />} />
           <Route path="/:spaceSlug" element={<PublicTestimonial />} />
         </Routes>
       </Router>

@@ -79,37 +79,41 @@ export default function SpaceInbox({ testimonials, setTestimonials }) {
     <div className="min-h-screen bg-[#0A0A0A] text-white flex font-sans">
       
 
-      <aside className="w-64 border-r border-[#1F1F1F] flex flex-col hidden md:flex">
-        <div className="p-6">
-          <h1 className="text-xl font-bold tracking-tight mb-8">Proof</h1>
-          
-          <button className="flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-8 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Dashboard
-          </button>
 
-          <div className="flex items-center gap-3 mb-8 px-2 py-1.5 bg-[#1A1A1A] rounded-lg">
-            <div className="w-6 h-6 rounded bg-[#2A2A2A] flex items-center justify-center text-xs font-bold font-serif">
+      <aside className="w-64 bg-[#0A0A0A] flex flex-col h-full flex-shrink-0 hidden md:flex">
+        <div className="p-6">
+
+          <h1 className="text-2xl font-extrabold tracking-tight mb-8">Proof</h1>
+          
+
+          <Link to="/dashboard" className="flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-8 transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Dashboard
+          </Link>
+
+
+          <div className="flex items-center gap-3 mb-8 px-3 py-2.5 bg-[#1F1F1F] rounded-xl border border-[#2A2A2A]">
+            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white">
               B
             </div>
-            <span className="text-sm font-semibold truncate">Bhavishya's Pro...</span>
+            <span className="text-[15px] font-bold text-white tracking-wide truncate">Bhavishya's Pro...</span>
           </div>
 
           <nav className="space-y-1">
-            <button className="w-full flex items-center gap-3 px-3 py-2 bg-[#1A1A1A] text-white rounded-lg text-sm font-medium">
-              <Inbox className="w-4 h-4" /> Inbox
-            </button>
-            <Link to="/wall-of-love" className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-lg text-sm font-medium transition-colors">
-              <Heart className="w-4 h-4" /> Wall of Love
-            </Link>
+             <Link to="/inbox" className="w-full flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] text-white rounded-xl text-[15px] font-semibold transition-colors">
+               <Inbox className="w-[18px] h-[18px]" /> Inbox
+             </Link>
+             <Link to="/wall-of-love" className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
+               <Heart className="w-[18px] h-[18px]" /> Wall of Love
+             </Link>
           </nav>
 
           <nav className="space-y-1 mt-8">
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-lg text-sm font-medium transition-colors">
-              <Settings className="w-4 h-4" /> Space Settings
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-lg text-sm font-medium transition-colors">
-              <Share2 className="w-4 h-4" /> Share Link
-            </button>
+             <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
+               <Settings className="w-[18px] h-[18px]" /> Space Settings
+             </button>
+             <Link to="/share" className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
+               <Share2 className="w-[18px] h-[18px]" /> Share Link
+             </Link>
           </nav>
         </div>
       </aside>
