@@ -119,46 +119,141 @@ export default function WallOfLove({ testimonials = [] }) {
             <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">Wall Configuration</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div 
+
+                <div
                     onClick={() => setActiveLayout("fixed")}
-                    className={`bg-[#151515] rounded-xl flex flex-col items-center cursor-pointer transition-all relative h-64 border-[1.5px] overflow-hidden group ${activeLayout === "fixed" ? "border-white shadow-[0_0_20px_rgba(255,255,255,0.05)]" : "border-[#1F1F1F] hover:border-[#333]"}`}
+                    className={`bg-[#111] rounded-xl cursor-pointer transition-all relative border-[1.5px] overflow-hidden group ${activeLayout === "fixed" ? "border-white shadow-[0_0_24px_rgba(255,255,255,0.07)]" : "border-[#222] hover:border-[#444]"}`}
+                    style={{ height: 220 }}
                 >
                     {activeLayout === "fixed" && (
-                        <div className="absolute top-3 right-3 bg-white text-black rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
+                        <div className="absolute top-3 right-3 z-10 bg-white text-black rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
                             <CheckCircle2 className="w-5 h-5" fill="white" />
                         </div>
                     )}
-                    <LayoutGrid className={`w-8 h-8 mb-4 stroke-[1.5px] ${activeLayout === "fixed" ? "text-white" : "text-gray-500"}`} />
-                    <span className={`text-[15px] font-semibold mb-6 ${activeLayout === "fixed" ? "text-white" : "text-gray-500"}`}>Masonry Fixed</span>
-                    <div className={`w-4 h-4 rounded-full border ${activeLayout === "fixed" ? "bg-white border-white" : "border-[#444] bg-transparent"}`} />
+                    <div className="absolute inset-0 overflow-hidden p-3 columns-2 gap-2 pointer-events-none">
+                        {[
+                          { h: "h-16", text: "Absolutely love this product!", stars: 5, avatar: "https://i.pravatar.cc/32?u=a" },
+                          { h: "h-24", text: "Game changer for our workflow. Highly recommend to everyone!", stars: 5, avatar: "https://i.pravatar.cc/32?u=b" },
+                          { h: "h-20", text: "Top-notch support and clean UI.", stars: 4, avatar: "https://i.pravatar.cc/32?u=c" },
+                          { h: "h-14", text: "Fantastic results.", stars: 5, avatar: "https://i.pravatar.cc/32?u=d" },
+                        ].map((card, i) => (
+                          <div key={i} className={`${card.h} bg-[#1E1E1E] rounded-lg p-2 flex flex-col gap-1 border border-[#2A2A2A] break-inside-avoid mb-2`}>
+                            <div className="flex items-center gap-1.5">
+                              <img src={card.avatar} className="w-4 h-4 rounded-full object-cover" alt="" />
+                              <div className="flex gap-px">{Array(card.stars).fill(0).map((_, s) => <span key={s} className="text-yellow-400 text-[7px]">★</span>)}</div>
+                            </div>
+                            <p className="text-[7px] text-gray-400 leading-tight line-clamp-3">{card.text}</p>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#111] via-[#111]/60 to-transparent py-3 flex flex-col items-center gap-1.5">
+                        <span className={`text-[13px] font-semibold ${activeLayout === "fixed" ? "text-white" : "text-gray-400"}`}>Masonry Fixed</span>
+                        <div className={`w-3.5 h-3.5 rounded-full border ${activeLayout === "fixed" ? "bg-white border-white" : "border-[#555] bg-transparent"}`} />
+                    </div>
                 </div>
 
-                <div 
+                <div
                     onClick={() => setActiveLayout("animated")}
-                    className={`bg-[#151515] rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all relative h-48 border-[1.5px] ${activeLayout === "animated" ? "border-white" : "border-transparent hover:border-[#333]"}`}
+                    className={`bg-[#111] rounded-xl cursor-pointer transition-all relative border-[1.5px] overflow-hidden group ${activeLayout === "animated" ? "border-white shadow-[0_0_24px_rgba(255,255,255,0.07)]" : "border-[#222] hover:border-[#444]"}`}
+                    style={{ height: 220 }}
                 >
                     {activeLayout === "animated" && (
-                        <div className="absolute top-3 right-3 bg-white text-black rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
+                        <div className="absolute top-3 right-3 z-10 bg-white text-black rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
                             <CheckCircle2 className="w-5 h-5" fill="white" />
                         </div>
                     )}
-                    <Layers className={`w-8 h-8 mb-4 stroke-[1.5px] ${activeLayout === "animated" ? "text-white" : "text-gray-500"}`} />
-                    <span className={`text-[15px] font-semibold mb-6 ${activeLayout === "animated" ? "text-white" : "text-gray-500"}`}>Masonry Animated</span>
-                    <div className={`w-4 h-4 rounded-full border ${activeLayout === "animated" ? "bg-white border-white" : "border-[#444] bg-transparent"}`} />
+                    <div className="absolute inset-0 overflow-hidden p-3 flex gap-2 pointer-events-none">
+                      {[
+                        [
+                          { text:"Life-changing product!", avatar:"https://i.pravatar.cc/32?u=e", stars:5 },
+                          { text:"Really polished UI.", avatar:"https://i.pravatar.cc/32?u=f", stars:4 },
+                          { text:"Great onboarding.", avatar:"https://i.pravatar.cc/32?u=g", stars:5 },
+                          { text:"Love the simplicity!", avatar:"https://i.pravatar.cc/32?u=h", stars:5 },
+                        ],
+                        [
+                          { text:"Best tool we found.", avatar:"https://i.pravatar.cc/32?u=i", stars:5 },
+                          { text:"10x our conversions.", avatar:"https://i.pravatar.cc/32?u=j", stars:5 },
+                          { text:"The support is amazing!", avatar:"https://i.pravatar.cc/32?u=k", stars:4 },
+                          { text:"Seamless experience.", avatar:"https://i.pravatar.cc/32?u=l", stars:5 },
+                        ],
+                        [
+                          { text:"Highly recommended.", avatar:"https://i.pravatar.cc/32?u=m", stars:5 },
+                          { text:"Saved us hours daily.", avatar:"https://i.pravatar.cc/32?u=n", stars:5 },
+                          { text:"Must-have for any team!", avatar:"https://i.pravatar.cc/32?u=o", stars:4 },
+                          { text:"Zero friction setup.", avatar:"https://i.pravatar.cc/32?u=p", stars:5 },
+                        ],
+                      ].map((col, ci) => (
+                        <div key={ci} className="flex-1 overflow-hidden">
+                          <div
+                            className="flex flex-col gap-2"
+                            style={{
+                              animation: `${ci % 2 === 0 ? "previewScrollUp" : "previewScrollDown"} ${5 + ci}s linear infinite`,
+                            }}
+                          >
+                            {[...col, ...col].map((card, i) => (
+                              <div key={i} className="bg-[#1E1E1E] rounded-lg p-2 flex flex-col gap-1 border border-[#2A2A2A]">
+                                <div className="flex items-center gap-1.5">
+                                  <img src={card.avatar} className="w-4 h-4 rounded-full object-cover" alt="" />
+                                  <div className="flex gap-px">{Array(card.stars).fill(0).map((_, s) => <span key={s} className="text-yellow-400 text-[7px]">★</span>)}</div>
+                                </div>
+                                <p className="text-[7px] text-gray-400 leading-tight">{card.text}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#111] via-[#111]/60 to-transparent py-3 flex flex-col items-center gap-1.5">
+                        <span className={`text-[13px] font-semibold ${activeLayout === "animated" ? "text-white" : "text-gray-400"}`}>Masonry Animated</span>
+                        <div className={`w-3.5 h-3.5 rounded-full border ${activeLayout === "animated" ? "bg-white border-white" : "border-[#555] bg-transparent"}`} />
+                    </div>
                 </div>
 
-                <div 
+                <div
                     onClick={() => setActiveLayout("carousel")}
-                    className={`bg-[#151515] rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all relative h-48 border-[1.5px] ${activeLayout === "carousel" ? "border-white" : "border-transparent hover:border-[#333]"}`}
+                    className={`bg-[#111] rounded-xl cursor-pointer transition-all relative border-[1.5px] overflow-hidden group ${activeLayout === "carousel" ? "border-white shadow-[0_0_24px_rgba(255,255,255,0.07)]" : "border-[#222] hover:border-[#444]"}`}
+                    style={{ height: 220 }}
                 >
                     {activeLayout === "carousel" && (
-                        <div className="absolute top-3 right-3 bg-white text-black rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
+                        <div className="absolute top-3 right-3 z-10 bg-white text-black rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
                             <CheckCircle2 className="w-5 h-5" fill="white" />
                         </div>
                     )}
-                    <Columns className={`w-8 h-8 mb-4 stroke-[1.5px] ${activeLayout === "carousel" ? "text-white" : "text-gray-500"}`} />
-                    <span className={`text-[15px] font-semibold mb-6 ${activeLayout === "carousel" ? "text-white" : "text-gray-500"}`}>Carousel</span>
-                    <div className={`w-4 h-4 rounded-full border ${activeLayout === "carousel" ? "bg-white border-white" : "border-[#444] bg-transparent"}`} />
+                    <div className="absolute inset-0 overflow-hidden flex items-center justify-start pointer-events-none mt-2">
+                        <div 
+                           className="flex gap-3 whitespace-nowrap"
+                           style={{ animation: "previewScrollLeft 10s linear infinite" }}
+                        >
+                            {[
+                                { name: "Sarah J.", avatar: "https://i.pravatar.cc/32?u=q", text: "Absolutely game-changing product!" },
+                                { name: "Mark T.", avatar: "https://i.pravatar.cc/32?u=w", text: "Game changer for our workflow. Highly recommend to everyone!" },
+                                { name: "Elena R.", avatar: "https://i.pravatar.cc/32?u=e", text: "Top-notch support and clean UI." },
+                                { name: "David L.", avatar: "https://i.pravatar.cc/32?u=r", text: "Fantastic results and super fast." },
+                                { name: "Sarah J.", avatar: "https://i.pravatar.cc/32?u=q", text: "Absolutely game-changing product!" },
+                                { name: "Mark T.", avatar: "https://i.pravatar.cc/32?u=w", text: "Game changer for our workflow. Highly recommend to everyone!" },
+                                { name: "Elena R.", avatar: "https://i.pravatar.cc/32?u=e", text: "Top-notch support and clean UI." },
+                                { name: "David L.", avatar: "https://i.pravatar.cc/32?u=r", text: "Fantastic results and super fast." },
+                            ].map((user, i) => (
+                                <div key={i} className="bg-[#1E1E1E] rounded-xl p-3 border border-[#2A2A2A] w-[200px] flex-shrink-0 flex flex-col gap-2 whitespace-normal">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <img src={user.avatar} className="w-6 h-6 rounded-full object-cover" alt="" />
+                                        <div>
+                                            <p className="text-[9px] font-semibold text-white">{user.name}</p>
+                                            <div className="flex gap-px">{Array(5).fill(0).map((_, s) => <span key={s} className="text-yellow-400 text-[7px]">★</span>)}</div>
+                                        </div>
+                                    </div>
+                                    <p className="text-[8px] text-gray-400 leading-tight">{user.text}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="absolute bottom-9 inset-x-0 flex justify-center gap-1">
+                        {[0,1,2].map(d => <div key={d} className={`rounded-full ${d===0 ? "w-3 h-1.5 bg-white" : "w-1.5 h-1.5 bg-[#444]"}`} />)}
+                    </div>
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#111] via-[#111]/60 to-transparent py-3 flex flex-col items-center gap-1.5">
+                        <span className={`text-[13px] font-semibold ${activeLayout === "carousel" ? "text-white" : "text-gray-400"}`}>Carousel</span>
+                        <div className={`w-3.5 h-3.5 rounded-full border ${activeLayout === "carousel" ? "bg-white border-white" : "border-[#555] bg-transparent"}`} />
+                    </div>
                 </div>
             </div>
 
