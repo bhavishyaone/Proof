@@ -89,13 +89,9 @@ export default function EmbedCode() {
       <main className="flex-1 flex flex-col h-full bg-[#0A0A0A] overflow-hidden">
 
         <header className="flex items-center justify-center px-8 py-4 border-b border-[#1F1F1F] relative shrink-0">
-          <Link to="/wall-configuration" state={{ layout }} className="absolute left-8 text-[10px] text-gray-500 font-bold tracking-widest uppercase hover:text-white transition-colors">
-            Page 15
-          </Link>
+         
           <h2 className="text-[12px] font-bold text-white uppercase tracking-widest">Embed Code Modal</h2>
-          <span className="absolute right-8 text-[11px] text-gray-500 font-semibold">
-            → Page 17: Space Settings
-          </span>
+          
         </header>
 
         <div className="flex-1 flex items-center justify-center bg-black/60 p-8 overflow-y-auto">
