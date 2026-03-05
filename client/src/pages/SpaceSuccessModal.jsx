@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, Copy, Check, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SpaceContext } from "../context/SpaceContext";
 
 export default function SpaceSuccessModal() {
   const [copied, setCopied] = useState(false);
-  const location = useLocation();
+  const { activeSpace } = useContext(SpaceContext);
   const navigate = useNavigate();
 
-  const spaceName = location.state?.spaceName || "Bhavishya's Product";
-  const publicUrl = `https://useproof.io/${spaceName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const spaceName = activeSpace?.name || "Your Space";
+  const publicUrl = `${window.location.origin}/${activeSpace?.slug || ""}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(publicUrl);

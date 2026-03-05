@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useRef, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ArrowLeft, Inbox, Heart, Edit, Share2, Video, Edit3, Image as ImageIcon, Check, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,32 +12,96 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import api from "../lib/api";
+import { SpaceContext } from "../context/SpaceContext";
+
+const collectionTypeMap = {
+  both: "Text and video",
+  text: "Text only",
+  video: "Video only",
+};
+
+const collectionTypeReverseMap = {
+  "Text and video": "both",
+  "Text only": "text",
+  "Video only": "video",
+};
 
 export default function EditSpace() {
+  const { activeSpace, selectSpace } = useContext(SpaceContext);
+
   const [form, setForm] = useState({
-    spaceName: "Bhavishya's Product",
-    headerTitle: "Your Header Here",
-    customMessage: "Your custom message will appear here to welcome your customers.",
-    collectStarRatings: true,
+    spaceName: "",
+    headerTitle: "",
+    customMessage: "",
+    collectStarRatings: false,
     theme: "light",
     collectName: true,
     collectEmail: true,
     collectionType: "Text and video",
     logoUrl: null
   });
-  
-  const [isSaved, setIsSaved] = useState(false);
 
+  const [logoFile, setLogoFile] = useState(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleSave = () => {
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
+  useEffect(() => {
+    if (activeSpace) {
+      setForm({
+        spaceName: activeSpace.name || "",
+        headerTitle: activeSpace.headerTitle || "",
+        customMessage: activeSpace.customMessage || "",
+        collectStarRatings: activeSpace.allowStarRating || false,
+        theme: activeSpace.theme || "light",
+        collectName: activeSpace.collectName ?? true,
+        collectEmail: activeSpace.collectEmail ?? true,
+        collectionType: collectionTypeMap[activeSpace.collectionType] || "Text and video",
+        logoUrl: activeSpace.logo || null,
+      });
+    }
+  }, [activeSpace]);
+
+  const handleSave = async () => {
+    setError("");
+    if (!form.spaceName.trim()) return setError("Space name is required.");
+    if (!form.headerTitle.trim()) return setError("Header title is required.");
+    if (form.customMessage.trim().length < 30) return setError("Custom message must be at least 30 characters.");
+
+    const formData = new FormData();
+    formData.append("name", form.spaceName.trim());
+    formData.append("headerTitle", form.headerTitle.trim());
+    formData.append("customMessage", form.customMessage.trim());
+    formData.append("collectName", form.collectName);
+    formData.append("collectEmail", form.collectEmail);
+    formData.append("collectionType", collectionTypeReverseMap[form.collectionType] || "both");
+    formData.append("allowStarRating", form.collectStarRatings);
+    formData.append("theme", form.theme);
+    if (logoFile) formData.append("logo", logoFile);
+
+    setSubmitting(true);
+    try {
+      const res = await api.patch(`/workspace/${activeSpace._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      selectSpace(res.data.workspace);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 3000);
+    } 
+    catch (err) {
+      setError(err.response?.data?.message || "Failed to save changes.");
+    } 
+    finally {
+      setSubmitting(false);
+    }
   };
 
   const handleLogoUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      setLogoFile(file);
       const imageUrl = URL.createObjectURL(file);
       setForm(prev => ({ ...prev, logoUrl: imageUrl }));
     }
@@ -54,10 +118,14 @@ export default function EditSpace() {
           </Link>
 
           <div className="flex items-center gap-3 mb-8 px-3 py-2.5 bg-[#1F1F1F] rounded-xl border border-[#2A2A2A]">
-            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white">
-              B
+            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white overflow-hidden">
+              {activeSpace?.logo ? (
+                <img src={activeSpace.logo} alt="logo" className="w-full h-full object-cover" />
+              ) : (
+                (activeSpace?.name || "S").charAt(0).toUpperCase()
+              )}
             </div>
-            <span className="text-[15px] font-bold text-white tracking-wide truncate">{form.spaceName}</span>
+            <span className="text-[15px] font-bold text-white tracking-wide truncate">{activeSpace?.name || "My Space"}</span>
           </div>
 
           <nav className="space-y-1">
@@ -264,13 +332,18 @@ export default function EditSpace() {
                     </div>
                   </div>
 
-                  <Button 
+                  {error && (
+                    <p className="text-red-500 text-xs font-medium">{error}</p>
+                  )}
+
+                  <Button
                     onClick={handleSave}
+                    disabled={submitting}
                     className="w-full bg-[#5D5FEF] hover:bg-[#4F51D6] text-white py-6 rounded-lg font-bold text-base shadow-lg shadow-indigo-500/20"
                   >
-                    Save Changes
+                    {submitting ? "Saving..." : "Save Changes"}
                   </Button>
-                  
+
                   {isSaved && (
                     <p className="text-center text-sm font-medium text-[#22C55E] mt-3 pb-4">
                       Space settings saved successfully!
