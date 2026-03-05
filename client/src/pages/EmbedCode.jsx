@@ -214,7 +214,8 @@ export default function EmbedCode() {
               </Button>
               <Button
                 onClick={handleCopy}
-                className="flex-1 bg-white text-black hover:bg-gray-200 py-6 rounded-xl font-bold text-[15px] flex items-center justify-center gap-2 transition-all"
+                disabled={loadingCode || !embedCode}
+                className="flex-1 bg-white text-black hover:bg-gray-200 py-6 rounded-xl font-bold text-[15px] flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {copied ? (
                   <>
@@ -224,7 +225,7 @@ export default function EmbedCode() {
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    Copy Code
+                    {loadingCode ? "Loading..." : "Copy Code"}
                   </>
                 )}
               </Button>
