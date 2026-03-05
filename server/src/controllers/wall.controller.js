@@ -129,11 +129,6 @@ export const updateWall = async (req, res) => {
       return res.status(403).json({ message: "Not authorized." });
     }
 
-    const wall = await WallOfLove.findOne({ workspaceId: req.params.id });
-    if (!wall) {
-      return res.status(404).json({ message: "Wall not found." });
-    }
-
     const allowedFields = [
       "layout",
       "darkTheme",
@@ -154,8 +149,6 @@ export const updateWall = async (req, res) => {
       return res.status(400).json({ message: "Request body is empty." });
     }
 
-    // console.log(req.body)
-
     const updates = {};
 
     allowedFields.forEach((field) => {
@@ -164,8 +157,7 @@ export const updateWall = async (req, res) => {
       }
     });
 
-
-    if (updates.layout && !["masonry-animated", "masonry-fixed", "carousel"].includes(updates.layout)) {
+    if (updates.layout && !["masonry-animated", "masonry-fixed", "carousel", "animated", "fixed"].includes(updates.layout)) {
       return res.status(400).json({ message: "Invalid layout." });
     }
 
@@ -173,14 +165,14 @@ export const updateWall = async (req, res) => {
       return res.status(400).json({ message: "Invalid card size." });
     }
 
-    const updated = await WallOfLove.findByIdAndUpdate(
-      wall._id,
-      { $set: updates },
-      { returnDocument: "after" }
+    const updated = await WallOfLove.findOneAndUpdate(
+      { workspaceId: req.params.id },
+      { $set: { ...updates, workspaceId: req.params.id } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    
+
     return res.status(200).json({
-      message: "Wall updated.",
+      message: "Wall saved.",
       wall: updated
     });
 
