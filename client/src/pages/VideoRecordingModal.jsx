@@ -202,7 +202,7 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
     setSubmitting(true);
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/public/${spaceSlug}`,
+        `${import.meta.env.VITE_API_URL}/public/${spaceSlug}/submit`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

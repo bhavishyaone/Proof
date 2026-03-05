@@ -32,7 +32,7 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
 
     setSubmitting(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/public/${spaceSlug}`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/public/${spaceSlug}/submit`, {
         type: "text",
         name: name.trim(),
         email: email.trim(),
