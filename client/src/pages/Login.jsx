@@ -1,9 +1,7 @@
-import axios from "axios";
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,32 +11,28 @@ import { Separator } from "@/components/ui/separator";
 export default function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const submit = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (!form.email.trim()) return setError("Please enter your email address.");
+    if (!form.email.trim()) return setError("Please enter your email.");
     if (!form.password.trim()) return setError("Please enter your password.");
-
     setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:8000/auth/login", form);
-      login(res.data.token);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.response?.data?.message || "Invalid email or password.");
-    } finally {
-      setLoading(false);
+    const result = await login(form.email, form.password);
+    setLoading(false);
+    if (result.success) {
+      navigate(from, { replace: true });
+    } else {
+      setError(result.message);
     }
   };
 
