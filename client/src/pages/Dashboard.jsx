@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Plus, Search, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Dashboard() {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const displayName = user?.name || "User";
+  const initial = displayName.charAt(0).toUpperCase();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col font-sans text-white">
       
@@ -27,15 +39,18 @@ export default function Dashboard() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-3 hover:opacity-80 transition-opacity outline-none">
-              <span className="text-sm font-medium">Bhavishya</span>
+              <span className="text-sm font-medium">{displayName}</span>
               <Avatar className="w-8 h-8 rounded-full border border-[#2A2A2A]">
-                <AvatarFallback className="bg-[#1A1A1A] text-white text-xs">B</AvatarFallback>
+                <AvatarFallback className="bg-[#1A1A1A] text-white text-xs">{initial}</AvatarFallback>
               </Avatar>
               <ChevronDown className="w-4 h-4 text-[#6B6B6B]" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 bg-[#1A1A1A] border-[#2A2A2A] text-white">
-            <DropdownMenuItem className="focus:bg-[#2A2A2A] focus:text-white cursor-pointer">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="focus:bg-[#2A2A2A] focus:text-white cursor-pointer text-red-400 focus:text-red-400"
+            >
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

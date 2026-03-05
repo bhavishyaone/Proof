@@ -1,9 +1,7 @@
-import axios from "axios";
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export default function Register() {
-  const { login } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -19,22 +17,21 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const submit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!form.name.trim()) return setError("Please enter your full name.");
+    if (!form.email.trim()) return setError("Please enter your email address.");
+    if (form.password.length < 6) return setError("Password must be at least 6 characters.");
     setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:8000/auth/register", form);
-      login(res.data.token);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    const result = await register(form.name, form.email, form.password);
+    setLoading(false);
+    if (result.success) {
+      navigate("/dashboard", { replace: true });
+    } else {
+      setError(result.message);
     }
   };
 

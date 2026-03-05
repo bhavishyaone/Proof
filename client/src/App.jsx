@@ -13,8 +13,9 @@ import NotFound from "./pages/NotFound.jsx";
 import PublicTestimonial from "./pages/PublicTestimonial.jsx";
 import ThankYou from "./pages/ThankYou.jsx";
 import ShareLink from "./pages/ShareLink.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 const INITIAL_TESTIMONIALS = [
   {
@@ -68,19 +69,26 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
+
+
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-space" element={<CreateSpaceModal onClose={() => window.history.back()} />} />
-          <Route path="/edit-space" element={<EditSpace />} />
-          <Route path="/space-success" element={<SpaceSuccessModal />} />
-          <Route path="/inbox" element={<SpaceInbox testimonials={testimonials} setTestimonials={setTestimonials} />} />
-          <Route path="/wall-of-love" element={<WallOfLove testimonials={testimonials} />} />
-          <Route path="/wall-configuration" element={<WallConfiguration />} />
-          <Route path="/embed-code" element={<EmbedCode />} />
           <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/share" element={<ShareLink />} />
           <Route path="/:spaceSlug" element={<PublicTestimonial />} />
+
+
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/create-space" element={<ProtectedRoute><CreateSpaceModal onClose={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="/edit-space" element={<ProtectedRoute><EditSpace /></ProtectedRoute>} />
+          <Route path="/space-success" element={<ProtectedRoute><SpaceSuccessModal /></ProtectedRoute>} />
+          <Route path="/inbox" element={<ProtectedRoute><SpaceInbox testimonials={testimonials} setTestimonials={setTestimonials} /></ProtectedRoute>} />
+          <Route path="/wall-of-love" element={<ProtectedRoute><WallOfLove testimonials={testimonials} /></ProtectedRoute>} />
+          <Route path="/wall-configuration" element={<ProtectedRoute><WallConfiguration /></ProtectedRoute>} />
+          <Route path="/embed-code" element={<ProtectedRoute><EmbedCode /></ProtectedRoute>} />
+          <Route path="/share" element={<ProtectedRoute><ShareLink /></ProtectedRoute>} />
+
+          {/* ── 404 ── */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
