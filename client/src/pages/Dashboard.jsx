@@ -27,12 +27,31 @@ export default function Dashboard() {
   const [spaces, setSpaces] = useState([]);
   const [loadingSpaces, setLoadingSpaces] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [totalTestimonials, setTotalTestimonials] = useState(null);
+  const [approvedCount, setApprovedCount] = useState(null);
 
   useEffect(() => {
     const fetchSpaces = async () => {
       try {
         const res = await api.get("/workspace");
-        setSpaces(res.data.workspaces || []);
+        const fetched = res.data.workspaces || [];
+        setSpaces(fetched);
+
+
+        let total = 0;
+        let approved = 0;
+        await Promise.all(
+          fetched.map(async (space) => {
+            try {
+              const t = await api.get(`/testimonial/${space._id}`);
+              total += t.data.total || 0;
+              const approvedRes = await api.get(`/testimonial/${space._id}?status=approved`);
+              approved += approvedRes.data.total || 0;
+            } catch (_) {}
+          })
+        );
+        setTotalTestimonials(total);
+        setApprovedCount(approved);
       } catch (err) {
         console.error("Failed to fetch spaces:", err);
       } finally {
@@ -102,14 +121,18 @@ export default function Dashboard() {
           <Card className="col-span-1 bg-[#1A1A1A] border-[#2A2A2A] shadow-none rounded-2xl">
             <CardContent className="p-6">
               <p className="text-[#6B6B6B] text-xs font-semibold tracking-widest uppercase mb-2">Total Testimonials</p>
-              <p className="text-3xl font-bold text-white">—</p>
+              <p className="text-3xl font-bold text-white">
+                {loadingSpaces ? <Loader2 className="w-6 h-6 animate-spin text-[#6B6B6B]" /> : (totalTestimonials ?? "—")}
+              </p>
             </CardContent>
           </Card>
 
           <Card className="col-span-1 bg-[#1A1A1A] border-[#2A2A2A] shadow-none rounded-2xl">
             <CardContent className="p-6">
               <p className="text-[#6B6B6B] text-xs font-semibold tracking-widest uppercase mb-2">Approved</p>
-              <p className="text-3xl font-bold text-[#22C55E]">—</p>
+              <p className="text-3xl font-bold text-[#22C55E]">
+                {loadingSpaces ? <Loader2 className="w-6 h-6 animate-spin text-[#6B6B6B]" /> : (approvedCount ?? "—")}
+              </p>
             </CardContent>
           </Card>
         </div>

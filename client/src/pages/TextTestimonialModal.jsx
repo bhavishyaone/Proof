@@ -4,24 +4,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function TextTestimonialModal({ onClose, spaceName = "Bhavishya's Product" }) {
+export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
+  const spaceName = space?.name || "this space";
   const [rating, setRating] = useState(5);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [testimonial, setTestimonial] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [permissionGranted, setPermissionGranted] = useState(false);
-  
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
   const [attachedImage, setAttachedImage] = useState(null);
   const [userPhoto, setUserPhoto] = useState(null);
   const attachedImageRef = useRef(null);
   const userPhotoRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSend = () => {
-    onClose();
-    navigate("/thank-you");
+  const handleSend = async () => {
+    setError("");
+    if (!name.trim()) return setError("Your name is required.");
+    if (!email.trim()) return setError("Your email is required.");
+    if (testimonial.trim().length < 30) return setError("Testimonial must be at least 30 characters.");
+    if (!permissionGranted) return setError("You must grant permission to submit.");
+
+    setSubmitting(true);
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/public/${spaceSlug}`, {
+        type: "text",
+        name: name.trim(),
+        email: email.trim(),
+        rating,
+        message: testimonial.trim(),
+        consent: true,
+      });
+      onClose();
+      navigate("/thank-you");
+    } catch (err) {
+      setError(err.response?.data?.message || "Submission failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleAttachedImage = (e) => {
@@ -178,24 +203,28 @@ export default function TextTestimonialModal({ onClose, spaceName = "Bhavishya's
           </span>
         </div>
 
+        {error && (
+          <p className="text-red-500 text-xs font-medium text-center mb-2">{error}</p>
+        )}
+
         <div className="flex items-center justify-end gap-2 mt-auto">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             onClick={onClose}
             className="text-white hover:bg-[#2A2A2A] hover:text-white px-6 h-11 rounded-lg font-semibold"
           >
             Cancel
           </Button>
-          <Button 
-            disabled={!permissionGranted}
+          <Button
+            disabled={!permissionGranted || submitting}
             onClick={handleSend}
             className={`px-8 h-11 rounded-lg font-bold transition-colors ${
-              permissionGranted 
-                ? "bg-white text-black hover:bg-gray-200" 
+              permissionGranted && !submitting
+                ? "bg-white text-black hover:bg-gray-200"
                 : "bg-[#333333] text-gray-500 cursor-not-allowed"
             }`}
           >
-            Send
+            {submitting ? "Sending..." : "Send"}
           </Button>
         </div>
 
