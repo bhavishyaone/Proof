@@ -1,16 +1,17 @@
-import React, { useState, useContext } from "react";
-import { Search, Inbox, Heart, Edit, Share2, ArrowLeft, Heart as HeartOutline, Trash2, CheckCircle, XCircle, Video as VideoIcon, Archive, AlertOctagon ,Undo2} from "lucide-react";
+import React, { useState, useContext, useEffect } from "react";
+import { Search, Inbox, Heart, Edit, Share2, ArrowLeft, Heart as HeartOutline, Trash2, CheckCircle, XCircle, Video as VideoIcon, Archive, AlertOctagon, Undo2, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { SpaceContext } from "../context/SpaceContext";
+import api from "../lib/api";
 
 const FilterButton = ({ active, label, onClick }) => (
   <button
     onClick={onClick}
     className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-      active 
-        ? "bg-white text-black" 
+      active
+        ? "bg-white text-black"
         : "bg-[#1A1A1A] text-gray-400 hover:text-white hover:bg-[#2A2A2A]"
     }`}
   >
@@ -28,56 +29,70 @@ const StarRating = ({ rating }) => (
   </div>
 );
 
-export default function SpaceInbox({ testimonials, setTestimonials }) {
+export default function SpaceInbox() {
   const { activeSpace } = useContext(SpaceContext);
   const spaceName = activeSpace?.name || "My Space";
   const spaceInitial = spaceName.charAt(0).toUpperCase();
 
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredTestimonials = testimonials.filter(t => {
+  useEffect(() => {
+    if (!activeSpace?._id) return;
+    const fetchTestimonials = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(`/testimonial/${activeSpace._id}`);
+        setTestimonials(res.data.testimonials || []);
+      } catch (err) {
+        console.error("Failed to fetch testimonials:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTestimonials();
+  }, [activeSpace?._id]);
 
-    let matchesCategory = false;
-    if (filter === "All") matchesCategory = true;
-    else if (filter === "Video") matchesCategory = t.type === "video";
-    else if (filter === "Text") matchesCategory = t.type === "text";
-    else if (filter === "Liked") matchesCategory = t.liked === true;
-    else if (filter === "Archived") matchesCategory = t.status === "archived";
-    else if (filter === "Spam") matchesCategory = t.status === "spam";
-    
-
-    const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    return matchesCategory && matchesSearch;
-  });
-
-  const handleApprove = (id) => {
-    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "approved" } : t));
+  const updateLocal = (id, changes) => {
+    setTestimonials(prev => prev.map(t => t._id === id ? { ...t, ...changes } : t));
   };
 
-  const handleUnapprove = (id) => {
-    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "pending" } : t));
+  const handleApprove = async (id) => {
+    await api.patch(`/testimonial/${id}/approve`);
+    updateLocal(id, { status: "approved" });
   };
 
-  const handleReject = (id) => {
-    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "rejected" } : t));
+  const handleUnapprove = async (id) => {
+    await api.patch(`/testimonial/${id}/reject`);
+    updateLocal(id, { status: "pending" });
   };
 
-  const toggleLike = (id) => {
-    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, liked: !t.liked } : t));
+  const handleReject = async (id) => {
+    await api.patch(`/testimonial/${id}/reject`);
+    updateLocal(id, { status: "rejected" });
   };
 
-  const handleArchive = (id) => {
-    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "archived" } : t));
+  const toggleLike = async (id) => {
+    const t = testimonials.find(t => t._id === id);
+    await api.patch(`/testimonial/${id}/like`);
+    updateLocal(id, { liked: !t.liked });
   };
 
-  const handleSpam = (id) => {
-    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, status: "spam" } : t));
+  const handleArchive = async (id) => {
+    await api.patch(`/testimonial/${id}/archive`);
+    updateLocal(id, { archived: true });
   };
 
-  const handleDelete = (id) => {
-    setTestimonials(prev => prev.filter(t => t.id !== id));
+  const handleSpam = async (id) => {
+    await api.patch(`/testimonial/${id}/spam`);
+    updateLocal(id, { spam: true });
+  };
+
+  const handleDelete = async (id) => {
+    await api.delete(`/testimonial/${id}`);
+    setTestimonials(prev => prev.filter(t => t._id !== id));
   };
 
   return (
