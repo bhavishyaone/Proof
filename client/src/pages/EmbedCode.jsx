@@ -1,23 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Inbox, Heart, Edit, Share2, Copy, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SpaceContext } from "../context/SpaceContext";
+import api from "../lib/api";
 
 export default function EmbedCode() {
+  const { activeSpace } = useContext(SpaceContext);
+  const spaceName = activeSpace?.name || "My Space";
+  const spaceInitial = spaceName.charAt(0).toUpperCase();
+
   const [copied, setCopied] = useState(false);
+  const [embedCode, setEmbedCode] = useState("");
+  const [loadingCode, setLoadingCode] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const layout = location.state?.layout || "animated";
 
-  const spaceSlug = "my-brand";
-  const embedCode = `<script type="text/javascript" src="https://testimonialproof.io/widget.js"></script>
-<iframe
-  id="testimonial-wall-of-love"
-  src="https://testimonialproof.io/w/${spaceSlug}"
-  frameborder="0"
-  scrolling="no"
-  width="100%"
-></iframe>`;
+  useEffect(() => {
+    if (!activeSpace?._id) return;
+    const fetchEmbedCode = async () => {
+      setLoadingCode(true);
+      try {
+        const res = await api.get(`/workspace/${activeSpace._id}/wall/embed-code`);
+        setEmbedCode(res.data.embedCode || "");
+      } catch (_) {
+        const origin = window.location.origin;
+        const slug = activeSpace?.slug || "my-space";
+        setEmbedCode(
+          `<script type="text/javascript" src="${origin}/widget.js"></script>\n<iframe\n  id="testimonial-wall-of-love"\n  src="${origin}/w/${slug}"\n  frameborder="0"\n  scrolling="no"\n  width="100%"\n></iframe>`
+        );
+      } finally {
+        setLoadingCode(false);
+      }
+    };
+    fetchEmbedCode();
+  }, [activeSpace?._id]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode).then(() => {
@@ -38,10 +56,14 @@ export default function EmbedCode() {
           </Link>
 
           <div className="flex items-center gap-3 mb-8 px-3 py-2.5 bg-[#1F1F1F] rounded-xl border border-[#2A2A2A]">
-            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white">
-              B
+            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white overflow-hidden">
+              {activeSpace?.logo ? (
+                <img src={activeSpace.logo} alt="logo" className="w-full h-full object-cover" />
+              ) : (
+                spaceInitial
+              )}
             </div>
-            <span className="text-[15px] font-bold text-white tracking-wide truncate">Bhavishya's Pro...</span>
+            <span className="text-[15px] font-bold text-white tracking-wide truncate">{spaceName}</span>
           </div>
 
           <nav className="space-y-1">
@@ -97,50 +119,17 @@ export default function EmbedCode() {
             </div>
 
             <div className="bg-[#0D0D0D] border border-[#2A2A2A] rounded-xl p-4 mb-6 relative group">
-              <pre className="text-xs font-mono text-gray-300 leading-relaxed whitespace-pre-wrap overflow-hidden">
-                <span className="text-[#E36EE7]">{"<script"}</span>
-                <span className="text-[#79C0FF]">{" type"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{"'text/javascript'"}</span>
-                <span className="text-[#79C0FF]">{" src"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{"'https://testimonialproof.io/widget.js'"}</span>
-                <span className="text-[#E36EE7]">{"></script>"}</span>
-                {"\n"}
-                <span className="text-[#E36EE7]">{"<iframe"}</span>
-                {"\n"}
-                {"  "}
-                <span className="text-[#79C0FF]">{"id"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{'"testimonial-wall-of-love"'}</span>
-                {"\n"}
-                {"  "}
-                <span className="text-[#79C0FF]">{"src"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{`"https://testimonialproof.io/w/${spaceSlug}"`}</span>
-                {"\n"}
-                {"  "}
-                <span className="text-[#79C0FF]">{"frameborder"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{'"0"'}</span>
-                {"\n"}
-                {"  "}
-                <span className="text-[#79C0FF]">{"scrolling"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{'"no"'}</span>
-                {"\n"}
-                {"  "}
-                <span className="text-[#79C0FF]">{"width"}</span>
-                <span className="text-white">{"="}</span>
-                <span className="text-[#A5D6FF]">{'"100%"'}</span>
-                {"\n"}
-                <span className="text-[#E36EE7]">{">"}</span>
-                <span className="text-[#E36EE7]">{"</iframe>"}</span>
-              </pre>
-
+              {loadingCode ? (
+                <p className="text-xs text-gray-500 font-mono py-2">Loading embed code...</p>
+              ) : (
+                <pre className="text-xs font-mono text-gray-300 leading-relaxed whitespace-pre-wrap overflow-hidden">
+                  {embedCode}
+                </pre>
+              )}
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-1.5 rounded-md bg-[#1E1E1E] hover:bg-[#2A2A2A] text-gray-500 hover:text-gray-200 transition-all opacity-0 group-hover:opacity-100"
+                disabled={loadingCode}
+                className="absolute top-3 right-3 p-1.5 rounded-md bg-[#1E1E1E] hover:bg-[#2A2A2A] text-gray-500 hover:text-gray-200 transition-all opacity-0 group-hover:opacity-100 disabled:cursor-not-allowed"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
               </button>

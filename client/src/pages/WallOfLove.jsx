@@ -325,7 +325,7 @@ export default function WallOfLove() {
 
             <div className="flex justify-center mb-24 mt-6">
                 <Button
-                  onClick={() => navigate("/embed-code", { state: { layout: activeLayout } })}
+                  onClick={() => navigate("/wall-configuration", { state: { layout: activeLayout } })}
                   disabled={savingLayout}
                   className="bg-white text-black hover:bg-gray-200 font-extrabold px-12 py-7 text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
                 >
