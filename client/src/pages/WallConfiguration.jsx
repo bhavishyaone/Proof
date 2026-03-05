@@ -117,14 +117,7 @@ export default function WallConfiguration() {
       <main className="flex-1 flex flex-col h-full bg-[#0A0A0A] overflow-hidden">
         
         <header className="flex items-center justify-center px-8 py-4 border-b border-[#1F1F1F] relative shrink-0">
-          <span className="absolute left-8 text-[10px] text-gray-500 font-bold tracking-widest uppercase">Page 15</span>
           <h2 className="text-[12px] font-bold text-white uppercase tracking-widest">Wall Configuration</h2>
-          <button
-            onClick={() => navigate("/embed-code", { state: { layout } })}
-            className="absolute right-8 text-[11px] text-gray-500 font-semibold cursor-pointer hover:text-white transition-colors"
-          >
-            → Page 16: Embed Code
-          </button>
         </header>
 
         <div className="flex-1 flex overflow-hidden">
