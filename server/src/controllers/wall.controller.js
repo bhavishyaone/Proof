@@ -104,7 +104,7 @@ export const getWall = async(req,res)=>{
 
         const wall = await WallOfLove.findOne({ workspaceId: req.params.id });
         if (!wall) {
-            return res.status(404).json({ message: "Wall not created yet." });
+            return res.status(200).json({ message: "Wall not created yet." });
         }
 
         return res.status(200).json({ wall});
