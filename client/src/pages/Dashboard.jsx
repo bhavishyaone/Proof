@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Plus, Search, ChevronDown, Loader2 } from "lucide-react";
+import { Plus, Search, ChevronDown, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { SpaceContext } from "../context/SpaceContext";
@@ -70,6 +70,23 @@ export default function Dashboard() {
   const handleSelectSpace = (space) => {
     selectSpace(space);
     navigate("/inbox");
+  };
+
+  const [deletingSpaceId, setDeletingSpaceId] = useState(null);
+
+  const handleDeleteSpace = async (e, spaceId) => {
+    e.stopPropagation();
+    const confirmed = window.confirm("Are you sure you want to delete this space? All testimonials will be permanently deleted.");
+    if (!confirmed) return;
+    setDeletingSpaceId(spaceId);
+    try {
+      await api.delete(`/workspace/${spaceId}`);
+      setSpaces((prev) => prev.filter((s) => s._id !== spaceId));
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete space.");
+    } finally {
+      setDeletingSpaceId(null);
+    }
   };
 
 
@@ -181,7 +198,7 @@ export default function Dashboard() {
               <div
                 key={space._id}
                 onClick={() => handleSelectSpace(space)}
-                className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-6 cursor-pointer hover:border-white/20 hover:bg-[#222] transition-all duration-150 group"
+                className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-6 cursor-pointer hover:border-white/20 hover:bg-[#222] transition-all duration-150 group relative"
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-[#2A2A2A] flex items-center justify-center text-base font-bold text-white flex-shrink-0 overflow-hidden">
@@ -191,10 +208,34 @@ export default function Dashboard() {
                       space.name.charAt(0).toUpperCase()
                     )}
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-white font-semibold text-sm truncate group-hover:text-white">{space.name}</p>
                     <p className="text-[#6B6B6B] text-xs truncate">/{space.slug}</p>
                   </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1.5 rounded-lg hover:bg-[#2A2A2A] text-[#6B6B6B] hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="w-40 bg-[#1A1A1A] border-[#2A2A2A] text-white"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <DropdownMenuItem
+                        onClick={(e) => handleDeleteSpace(e, space._id)}
+                        disabled={deletingSpaceId === space._id}
+                        className="text-red-400 focus:text-red-400 focus:bg-[#2A2A2A] cursor-pointer flex items-center gap-2"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        {deletingSpaceId === space._id ? "Deleting..." : "Delete Space"}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <div className="flex items-center justify-between text-xs text-[#6B6B6B]">
                   <span className="capitalize">{space.collectionType}</span>

@@ -1,26 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Inbox, Heart, Edit, Share2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { SpaceContext } from "../context/SpaceContext";
+import api from "../lib/api";
 
 export default function WallConfiguration() {
+  const { activeSpace } = useContext(SpaceContext);
+  const spaceName = activeSpace?.name || "My Space";
+  const spaceInitial = spaceName.charAt(0).toUpperCase();
+
   const [darkTheme, setDarkTheme] = useState(true);
   const [cardSize, setCardSize] = useState("Medium");
   const [arrowColor, setArrowColor] = useState("white");
-  
   const [hideDate, setHideDate] = useState(false);
   const [hideSourceIcons, setHideSourceIcons] = useState(false);
   const [minimizeImages, setMinimizeImages] = useState(false);
   const [showMoreButton, setShowMoreButton] = useState(true);
-
   const [autoplay, setAutoplay] = useState(true);
   const [oneRowSlider, setOneRowSlider] = useState(false);
   const [sameHeightVideos, setSameHeightVideos] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
   const layout = location.state?.layout || "animated";
+
+
+  useEffect(() => {
+    if (!activeSpace?._id) return;
+    const fetchWall = async () => {
+      try {
+        const res = await api.get(`/workspace/${activeSpace._id}/wall`);
+        const w = res.data.wall;
+        if (!w) return;
+        if (w.darkTheme !== undefined) setDarkTheme(w.darkTheme);
+        if (w.cardSize) setCardSize(w.cardSize.charAt(0).toUpperCase() + w.cardSize.slice(1));
+        if (w.arrowColor) setArrowColor(w.arrowColor);
+        if (w.hideDate !== undefined) setHideDate(w.hideDate);
+        if (w.hideSourceIcons !== undefined) setHideSourceIcons(w.hideSourceIcons);
+        if (w.minimizeImages !== undefined) setMinimizeImages(w.minimizeImages);
+        if (w.showMoreButton !== undefined) setShowMoreButton(w.showMoreButton);
+        if (w.autoplay !== undefined) setAutoplay(w.autoplay);
+        if (w.oneRowSlider !== undefined) setOneRowSlider(w.oneRowSlider);
+        if (w.sameHeightVideos !== undefined) setSameHeightVideos(w.sameHeightVideos);
+      } catch (_) {}
+    };
+    fetchWall();
+  }, [activeSpace?._id]);
+
+
+  const handleSaveAndContinue = async () => {
+    setSaving(true);
+    try {
+      await api.patch(`/workspace/${activeSpace._id}/wall`, {
+        darkTheme,
+        cardSize: cardSize.toLowerCase(),
+        arrowColor,
+        hideDate,
+        hideSourceIcons,
+        minimizeImages,
+        showMoreButton,
+        autoplay,
+        oneRowSlider,
+        sameHeightVideos,
+      });
+    } catch (_) {}
+    finally {
+      setSaving(false);
+      navigate("/embed-code", { state: { layout } });
+    }
+  };
 
   const switchClass = "data-[state=checked]:bg-white data-[state=unchecked]:bg-[#2a2a2a] [&>span]:data-[state=checked]:bg-black [&>span]:data-[state=unchecked]:bg-gray-400 border-none shadow-none ring-0";
 
@@ -35,10 +86,12 @@ export default function WallConfiguration() {
           </Link>
 
           <div className="flex items-center gap-3 mb-8 px-3 py-2.5 bg-[#1F1F1F] rounded-xl border border-[#2A2A2A]">
-            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white">
-              B
+            <div className="w-8 h-8 rounded-lg bg-[#333333] flex items-center justify-center text-sm font-bold font-serif text-white overflow-hidden">
+              {activeSpace?.logo ? (
+                <img src={activeSpace.logo} alt="logo" className="w-full h-full object-cover" />
+              ) : spaceInitial}
             </div>
-            <span className="text-[15px] font-bold text-white tracking-wide truncate">Bhavishya's Pro...</span>
+            <span className="text-[15px] font-bold text-white tracking-wide truncate">{spaceName}</span>
           </div>
 
           <nav className="space-y-1">
@@ -284,10 +337,11 @@ export default function WallConfiguration() {
                 
                 <div className="p-8 pb-10 border-t border-[#1F1F1F] bg-[#0A0A0A]">
                     <Button
-                        onClick={() => navigate("/embed-code", { state: { layout } })}
-                        className="w-full bg-white text-black hover:bg-gray-200 py-6 rounded-xl font-bold text-[15px] shadow-lg"
+                        onClick={handleSaveAndContinue}
+                        disabled={saving}
+                        className="w-full bg-white text-black hover:bg-gray-200 py-6 rounded-xl font-bold text-[15px] shadow-lg disabled:opacity-50"
                     >
-                        Save &amp; Continue
+                        {saving ? "Saving..." : "Save & Continue"}
                     </Button>
                 </div>
             </div>
