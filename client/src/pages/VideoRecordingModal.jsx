@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { X, Video, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function VideoRecordingModal({ onClose }) {
+export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
   const [videoDevices, setVideoDevices] = useState([]);
@@ -17,6 +22,12 @@ export default function VideoRecordingModal({ onClose }) {
   const [recordTime, setRecordTime] = useState(0);
   const [isReviewing, setIsReviewing] = useState(false);
   const timerRef = useRef(null);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function getDevices() {
@@ -166,14 +177,43 @@ export default function VideoRecordingModal({ onClose }) {
     }
   };
 
-  const handleSubmit = () => {
-    if (recordedChunks.length) {
+  const handleSubmit = async () => {
+    setError("");
+    if (!name.trim()) return setError("Your name is required.");
+    if (!email.trim()) return setError("Your email is required.");
+
+    const formData = new FormData();
+    formData.append("type", "video");
+    formData.append("name", name.trim());
+    formData.append("email", email.trim());
+    formData.append("rating", "5");
+    formData.append("message", message.trim() || "Video testimonial submission.");
+    formData.append("consent", "true");
+
+    if (recordedChunks.length > 0) {
       const blob = new Blob(recordedChunks, { type: "video/webm" });
-      console.log("Submitting recorded video blob:", blob);
+      formData.append("video", blob, "testimonial.webm");
     } else if (fileObject) {
-      console.log("Submitting uploaded file:", fileObject);
+      formData.append("video", fileObject, fileObject.name);
+    } else {
+      return setError("No video to submit.");
     }
-    handleClose();
+
+    setSubmitting(true);
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/public/${spaceSlug}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      if (stream) stream.getTracks().forEach(track => track.stop());
+      onClose();
+      navigate("/thank-you");
+    } catch (err) {
+      setError(err.response?.data?.message || "Submission failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const formatTime = (seconds) => {
@@ -292,20 +332,58 @@ export default function VideoRecordingModal({ onClose }) {
         </div>
 
         {isReviewing || fileObject ? (
-          <div className="w-full flex gap-3 mb-4">
-            <Button 
-              onClick={handleRetake}
-              variant="outline" 
-              className="flex-1 bg-transparent hover:bg-[#2A2A2A] text-white border-[#333] font-bold py-6 rounded-lg text-base"
-            >
-              Retake
-            </Button>
-            <Button 
-              onClick={handleSubmit}
-              className="flex-1 bg-white hover:bg-gray-100 text-black font-bold py-6 rounded-lg text-base"
-            >
-              Submit Video
-            </Button>
+          <div className="w-full flex flex-col gap-3 mb-4">
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Name <span className="text-red-500">*</span></label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Email <span className="text-red-500">*</span></label>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Short description (optional)</label>
+              <Textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Briefly describe your experience..."
+                className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg resize-none text-sm min-h-[70px]"
+              />
+            </div>
+
+            {error && <p className="text-red-500 text-xs font-medium text-center">{error}</p>}
+
+            <div className="flex gap-3">
+              <Button
+                onClick={handleRetake}
+                variant="outline"
+                className="flex-1 bg-transparent hover:bg-[#2A2A2A] text-white border-[#333] font-bold py-6 rounded-lg text-base"
+              >
+                Retake
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="flex-1 bg-white hover:bg-gray-100 text-black font-bold py-6 rounded-lg text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submitting ? "Uploading..." : "Submit Video"}
+              </Button>
+            </div>
           </div>
         ) : (
           <Button 

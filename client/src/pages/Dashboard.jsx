@@ -43,9 +43,9 @@ export default function Dashboard() {
         await Promise.all(
           fetched.map(async (space) => {
             try {
-              const t = await api.get(`/testimonial/${space._id}`);
+              const t = await api.get(`/workspace/${space._id}/testimonials`);
               total += t.data.total || 0;
-              const approvedRes = await api.get(`/testimonial/${space._id}?status=approved`);
+              const approvedRes = await api.get(`/workspace/${space._id}/testimonials?status=approved`);
               approved += approvedRes.data.total || 0;
             } catch (_) {}
           })

@@ -21,7 +21,7 @@ export default function WallOfLove() {
     const fetchApproved = async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/testimonial/${activeSpace._id}?status=approved`);
+        const res = await api.get(`/workspace/${activeSpace._id}/testimonials?status=approved`);
         setTestimonials(res.data.testimonials || []);
       } catch (err) {
         console.error("Failed to fetch approved testimonials:", err);

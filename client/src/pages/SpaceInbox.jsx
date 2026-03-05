@@ -44,7 +44,7 @@ export default function SpaceInbox() {
     const fetchTestimonials = async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/testimonial/${activeSpace._id}`);
+        const res = await api.get(`/workspace/${activeSpace._id}/testimonials`);
         setTestimonials(res.data.testimonials || []);
       } catch (err) {
         console.error("Failed to fetch testimonials:", err);
@@ -60,38 +60,38 @@ export default function SpaceInbox() {
   };
 
   const handleApprove = async (id) => {
-    await api.patch(`/testimonial/${id}/approve`);
+    await api.patch(`/testimonials/${id}/approve`);
     updateLocal(id, { status: "approved" });
   };
 
   const handleUnapprove = async (id) => {
-    await api.patch(`/testimonial/${id}/reject`);
+    await api.patch(`/testimonials/${id}/reject`);
     updateLocal(id, { status: "pending" });
   };
 
   const handleReject = async (id) => {
-    await api.patch(`/testimonial/${id}/reject`);
+    await api.patch(`/testimonials/${id}/reject`);
     updateLocal(id, { status: "rejected" });
   };
 
   const toggleLike = async (id) => {
     const t = testimonials.find(t => t._id === id);
-    await api.patch(`/testimonial/${id}/like`);
+    await api.patch(`/testimonials/${id}/like`);
     updateLocal(id, { liked: !t.liked });
   };
 
   const handleArchive = async (id) => {
-    await api.patch(`/testimonial/${id}/archive`);
+    await api.patch(`/testimonials/${id}/archive`);
     updateLocal(id, { archived: true });
   };
 
   const handleSpam = async (id) => {
-    await api.patch(`/testimonial/${id}/spam`);
+    await api.patch(`/testimonials/${id}/spam`);
     updateLocal(id, { spam: true });
   };
 
   const handleDelete = async (id) => {
-    await api.delete(`/testimonial/${id}`);
+    await api.delete(`/testimonials/${id}`);
     setTestimonials(prev => prev.filter(t => t._id !== id));
   };
 
