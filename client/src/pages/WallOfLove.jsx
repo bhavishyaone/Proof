@@ -258,9 +258,11 @@ export default function WallOfLove({ testimonials = [] }) {
             </div>
 
             <div className="flex justify-center mb-24 mt-6">
-                <Button className="bg-white text-black hover:bg-gray-200 font-extrabold px-12 py-7 text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                    Create Wall
-                </Button>
+                <Link to="/wall-configuration" state={{ layout: activeLayout }}>
+                    <Button className="bg-white text-black hover:bg-gray-200 font-extrabold px-12 py-7 text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                        Create Wall
+                    </Button>
+                </Link>
             </div>
 
         </section>
