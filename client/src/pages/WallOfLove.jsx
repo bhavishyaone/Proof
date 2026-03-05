@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ArrowLeft, Inbox, Heart, Edit, Share2, GripVertical, Layers, Columns, LayoutGrid, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SpaceContext } from "../context/SpaceContext";
 import api from "../lib/api";
 
@@ -11,10 +11,13 @@ export default function WallOfLove() {
   const { activeSpace } = useContext(SpaceContext);
   const spaceName = activeSpace?.name || "My Space";
   const spaceInitial = spaceName.charAt(0).toUpperCase();
+  const navigate = useNavigate();
 
   const [activeLayout, setActiveLayout] = useState("animated");
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [savingLayout, setSavingLayout] = useState(false);
+
 
   useEffect(() => {
     if (!activeSpace?._id) return;
@@ -31,6 +34,35 @@ export default function WallOfLove() {
     };
     fetchApproved();
   }, [activeSpace?._id]);
+
+
+  useEffect(() => {
+    if (!activeSpace?._id) return;
+    const fetchWall = async () => {
+      try {
+        const res = await api.get(`/workspace/${activeSpace._id}/wall`);
+        if (res.data.wall?.layout) setActiveLayout(res.data.wall.layout);
+      } catch (_) {}
+    };
+    fetchWall();
+  }, [activeSpace?._id]);
+
+
+  const handleLayoutSelect = async (layout) => {
+    setActiveLayout(layout);
+    setSavingLayout(true);
+    try {
+      await api.post(`/workspace/${activeSpace._id}/wall`, { layout });
+    } catch (err) {
+      if (err.response?.status === 400 || err.response?.status === 409) {
+        try {
+          await api.patch(`/workspace/${activeSpace._id}/wall`, { layout });
+        } catch (_) {}
+      }
+    } finally {
+      setSavingLayout(false);
+    }
+  };
 
   const approvedTestimonials = testimonials;
 
@@ -155,7 +187,7 @@ export default function WallOfLove() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
 
                 <div
-                    onClick={() => setActiveLayout("fixed")}
+                    onClick={() => handleLayoutSelect("fixed")}
                     className={`bg-[#111] rounded-xl cursor-pointer transition-all relative border-[1.5px] overflow-hidden group ${activeLayout === "fixed" ? "border-white shadow-[0_0_24px_rgba(255,255,255,0.07)]" : "border-[#222] hover:border-[#444]"}`}
                     style={{ height: 220 }}
                 >
@@ -187,7 +219,7 @@ export default function WallOfLove() {
                 </div>
 
                 <div
-                    onClick={() => setActiveLayout("animated")}
+                    onClick={() => handleLayoutSelect("animated")}
                     className={`bg-[#111] rounded-xl cursor-pointer transition-all relative border-[1.5px] overflow-hidden group ${activeLayout === "animated" ? "border-white shadow-[0_0_24px_rgba(255,255,255,0.07)]" : "border-[#222] hover:border-[#444]"}`}
                     style={{ height: 220 }}
                 >
@@ -244,7 +276,7 @@ export default function WallOfLove() {
                 </div>
 
                 <div
-                    onClick={() => setActiveLayout("carousel")}
+                    onClick={() => handleLayoutSelect("carousel")}
                     className={`bg-[#111] rounded-xl cursor-pointer transition-all relative border-[1.5px] overflow-hidden group ${activeLayout === "carousel" ? "border-white shadow-[0_0_24px_rgba(255,255,255,0.07)]" : "border-[#222] hover:border-[#444]"}`}
                     style={{ height: 220 }}
                 >
@@ -292,11 +324,13 @@ export default function WallOfLove() {
             </div>
 
             <div className="flex justify-center mb-24 mt-6">
-                <Link to="/wall-configuration" state={{ layout: activeLayout }}>
-                    <Button className="bg-white text-black hover:bg-gray-200 font-extrabold px-12 py-7 text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        Create Wall
-                    </Button>
-                </Link>
+                <Button
+                  onClick={() => navigate("/embed-code", { state: { layout: activeLayout } })}
+                  disabled={savingLayout}
+                  className="bg-white text-black hover:bg-gray-200 font-extrabold px-12 py-7 text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
+                >
+                  {savingLayout ? "Saving..." : "Create Wall"}
+                </Button>
             </div>
 
         </section>
