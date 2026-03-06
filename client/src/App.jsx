@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound.jsx";
 import PublicTestimonial from "./pages/PublicTestimonial.jsx";
 import ThankYou from "./pages/ThankYou.jsx";
 import ShareLink from "./pages/ShareLink.jsx";
+import EmbedWall from "./pages/EmbedWall.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/embed/:wallId" element={<EmbedWall />} />
             <Route path="/:spaceSlug" element={<PublicTestimonial />} />
 
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
