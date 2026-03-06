@@ -15,6 +15,7 @@ import PublicTestimonial from "./pages/PublicTestimonial.jsx";
 import ThankYou from "./pages/ThankYou.jsx";
 import ShareLink from "./pages/ShareLink.jsx";
 import EmbedWall from "./pages/EmbedWall.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -27,7 +28,7 @@ const App = () => {
         <Router>
           <Routes>
 
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/thank-you" element={<ThankYou />} />
