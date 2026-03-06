@@ -116,6 +116,8 @@ export default function CreateSpaceModal({ onClose }) {
                   <li className="flex items-start gap-2"><span className={form.theme === "dark" ? "text-gray-600" : "text-gray-300"}>•</span> Who are you / what are you working on?</li>
                   <li className="flex items-start gap-2"><span className={form.theme === "dark" ? "text-gray-600" : "text-gray-300"}>•</span> How has our service helped you?</li>
                   <li className="flex items-start gap-2"><span className={form.theme === "dark" ? "text-gray-600" : "text-gray-300"}>•</span> What is the best thing about our service?</li>
+                  <li className="flex items-start gap-2"><span className={form.theme === "dark" ? "text-gray-600" : "text-gray-300"}>•</span> What we can improve in our product?</li>
+
                 </ul>
               </div>
 
@@ -233,9 +235,8 @@ export default function CreateSpaceModal({ onClose }) {
               </div>
 
               <div className="flex items-center justify-between pt-4 pb-8"> 
-                <div className="space-y-2">
                   
-                </div>
+
                 <div className="space-y-2">
                   <Label className="text-[11px] font-bold text-gray-600">Collect star ratings</Label>
                   <div className="flex items-center h-8">

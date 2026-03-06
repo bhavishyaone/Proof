@@ -105,7 +105,13 @@ export default function PublicTestimonial() {
             <li className="flex items-start gap-3">
               <span className={`text-lg leading-none mt-0.5 ${theme === "dark" ? "text-[#444444]" : "text-gray-300"}`}>•</span>
               What is the best thing about our product?
-            </li>
+            </li >
+            <li className="flex items-start gap-3">
+              <span className={`text-lg leading-none mt-0.5 ${theme === "dark" ? "text-[#444444]" : "text-gray-300"}`}>•</span>
+              What we can improve in our Product?
+            </li >
+
+
           </ul>
         </div>
 

@@ -98,6 +98,11 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
               <span className="text-[#666] leading-none mt-[2px]">•</span> 
               What is the best thing?
             </li>
+
+            <li className="flex items-start gap-2">
+              <span className="text-[#666] leading-none mt-[2px]">•</span> 
+              What we can improve in our product?
+            </li>
           </ul>
         </div>
 
