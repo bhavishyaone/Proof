@@ -111,7 +111,7 @@ export default function Register() {
                     type="text"
                     name="name"
                     required
-                    placeholder="eg. Shiva Sharma"
+                    placeholder="Enter Your Name"
                     value={form.name}
                     onChange={handleChange}
                     className="bg-[#222222] border-[#2A2A2A] text-white placeholder:text-[#3D3D3D] focus-visible:ring-0 focus-visible:border-white transition-colors duration-150 rounded-lg"
@@ -126,7 +126,7 @@ export default function Register() {
                     type="email"
                     name="email"
                     required
-                    placeholder="shiva123@gmail.com"
+                    placeholder="Enter Your Email Address"
                     value={form.email}
                     onChange={handleChange}
                     className="bg-[#222222] border-[#2A2A2A] text-white placeholder:text-[#3D3D3D] focus-visible:ring-0 focus-visible:border-white transition-colors duration-150 rounded-lg"
@@ -142,7 +142,7 @@ export default function Register() {
                       type={showPassword ? "text" : "password"}
                       name="password"
                       required
-                      placeholder="••••••••"
+                      placeholder="Enter Your Password"
                       value={form.password}
                       onChange={handleChange}
                       className="bg-[#222222] border-[#2A2A2A] text-white placeholder:text-[#3D3D3D] focus-visible:ring-0 focus-visible:border-white transition-colors duration-150 rounded-lg pr-10"
