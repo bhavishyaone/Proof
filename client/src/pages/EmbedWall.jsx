@@ -9,6 +9,7 @@ export default function EmbedWall() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [carouselDir, setCarouselDir] = useState("next");
 
   useEffect(() => {
     const fetchWall = async () => {
@@ -169,20 +170,30 @@ export default function EmbedWall() {
 
 
   if (isCarousel) {
-    const prev = () => setCarouselIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
-    const next = () => setCarouselIndex((i) => (i + 1) % testimonials.length);
+    const prev = () => { setCarouselDir("prev"); setCarouselIndex((i) => (i - 1 + testimonials.length) % testimonials.length); };
+    const next = () => { setCarouselDir("next"); setCarouselIndex((i) => (i + 1) % testimonials.length); };
+    const dotTo = (i) => { setCarouselDir(i > carouselIndex ? "next" : "prev"); setCarouselIndex(i); };
 
     return (
-      <div style={{ background: bg, minHeight: "100vh", padding: "40px 24px", fontFamily: "system-ui, sans-serif", boxSizing: "border-box" }}>
-        <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
+      <div style={{ background: bg, minHeight: "100vh", padding: "40px 24px", fontFamily: "system-ui, sans-serif", boxSizing: "border-box", overflow: "hidden" }}>
+        <style>{`
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          @keyframes cSlideRight { from { opacity:0; transform:translateX(70px); } to { opacity:1; transform:translateX(0); } }
+          @keyframes cSlideLeft  { from { opacity:0; transform:translateX(-70px); } to { opacity:1; transform:translateX(0); } }
+        `}</style>
         <div style={{ maxWidth: "520px", margin: "0 auto", position: "relative" }}>
-          {testimonials.length > 0 && renderCard(testimonials[carouselIndex])}
+          <div
+            key={carouselIndex}
+            style={{ animation: carouselDir === "next" ? "cSlideRight 0.35s ease-out both" : "cSlideLeft 0.35s ease-out both" }}
+          >
+            {testimonials.length > 0 && renderCard(testimonials[carouselIndex])}
+          </div>
 
           {testimonials.length > 1 && (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", marginTop: "16px" }}>
               <button
                 onClick={prev}
-                style={{ width: "32px", height: "32px", borderRadius: "50%", border: "none", cursor: "pointer", ...arrowBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px" }}
+                style={{ width: "32px", height: "32px", borderRadius: "50%", border: "none", cursor: "pointer", ...arrowBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", fontWeight: "700" }}
               >
                 ‹
               </button>
@@ -190,14 +201,14 @@ export default function EmbedWall() {
                 {testimonials.map((_, i) => (
                   <div
                     key={i}
-                    onClick={() => setCarouselIndex(i)}
-                    style={{ width: "8px", height: "8px", borderRadius: "50%", background: i === carouselIndex ? (darkTheme ? "#FFFFFF" : "#111111") : (darkTheme ? "#333333" : "#D1D5DB"), cursor: "pointer", transition: "background 0.2s" }}
+                    onClick={() => dotTo(i)}
+                    style={{ width: i === carouselIndex ? "18px" : "8px", height: "8px", borderRadius: "4px", background: i === carouselIndex ? (darkTheme ? "#FFFFFF" : "#111111") : (darkTheme ? "#333333" : "#D1D5DB"), cursor: "pointer", transition: "all 0.3s ease" }}
                   />
                 ))}
               </div>
               <button
                 onClick={next}
-                style={{ width: "32px", height: "32px", borderRadius: "50%", border: "none", cursor: "pointer", ...arrowBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px" }}
+                style={{ width: "32px", height: "32px", borderRadius: "50%", border: "none", cursor: "pointer", ...arrowBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", fontWeight: "700" }}
               >
                 ›
               </button>

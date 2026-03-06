@@ -26,6 +26,8 @@ export default function WallConfiguration() {
 
   const [previewTestimonials, setPreviewTestimonials] = useState([]);
   const [loadingPreview, setLoadingPreview] = useState(false);
+  const [carouselIdx, setCarouselIdx] = useState(0);
+  const [carouselDir, setCarouselDir] = useState("next");
 
   useEffect(() => {
     if (!activeSpace?._id) return;
@@ -199,8 +201,45 @@ export default function WallConfiguration() {
                       </div>
                     ) : layout === 'carousel' ? (
 
-                      <div className="w-full max-w-md mx-auto pointer-events-none">
-                        {previewTestimonials.slice(0, 1).map((t) => renderCard(t))}
+                      <div className="w-full max-w-md mx-auto" style={{ overflow: 'hidden' }}>
+                        <style>{`
+                          @keyframes slideFromRight { from { opacity:0; transform:translateX(60px); } to { opacity:1; transform:translateX(0); } }
+                          @keyframes slideFromLeft  { from { opacity:0; transform:translateX(-60px); } to { opacity:1; transform:translateX(0); } }
+                        `}</style>
+                        {/* Animated card — key forces remount on index change */}
+                        <div
+                          key={carouselIdx}
+                          style={{ animation: carouselDir === 'next' ? 'slideFromRight 0.32s ease-out both' : 'slideFromLeft 0.32s ease-out both' }}
+                        >
+                          {previewTestimonials.length > 0 && renderCard(previewTestimonials[carouselIdx])}
+                        </div>
+
+                        {previewTestimonials.length > 1 && (
+                          <div className="flex items-center justify-center gap-4 mt-5">
+                            <button
+                              onClick={() => { setCarouselDir('prev'); setCarouselIdx(i => (i - 1 + previewTestimonials.length) % previewTestimonials.length); }}
+                              className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer border-0 ${arrowColor === 'white' ? 'bg-white text-black' : arrowColor === 'yellow' ? 'bg-[#F59E0B] text-black' : 'border border-[#444] bg-transparent text-white'}`}
+                            >
+                              ‹
+                            </button>
+                            <div className="flex gap-2">
+                              {previewTestimonials.map((_, i) => (
+                                <div
+                                  key={i}
+                                  onClick={() => { setCarouselDir(i > carouselIdx ? 'next' : 'prev'); setCarouselIdx(i); }}
+                                  className="cursor-pointer transition-all duration-300 rounded-full"
+                                  style={{ width: i === carouselIdx ? '18px' : '8px', height: '8px', background: i === carouselIdx ? (darkTheme ? '#fff' : '#111') : (darkTheme ? '#333' : '#ccc') }}
+                                />
+                              ))}
+                            </div>
+                            <button
+                              onClick={() => { setCarouselDir('next'); setCarouselIdx(i => (i + 1) % previewTestimonials.length); }}
+                              className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer border-0 ${arrowColor === 'white' ? 'bg-white text-black' : arrowColor === 'yellow' ? 'bg-[#F59E0B] text-black' : 'border border-[#444] bg-transparent text-white'}`}
+                            >
+                              ›
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ) : layout.includes('animated') ? (
 
@@ -233,24 +272,6 @@ export default function WallConfiguration() {
                           )}
                         </div>
                       </div>
-                    )}
-
-                    {layout === 'carousel' && (
-                        <div className="absolute bottom-8 flex items-center justify-center w-full px-12">
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center absolute left-12 ${arrowColor === 'white' ? 'bg-white text-black' : arrowColor === 'yellow' ? 'bg-[#F59E0B] text-black' : 'border border-[#444] text-[#444]'}`}>
-                                <span className="text-[10px]">&lt;</span>
-                            </div>
-                            
-                            <div className="flex gap-2">
-                                <div className={`w-2 h-2 rounded-full ${darkTheme ? 'bg-white' : 'bg-black'}`} />
-                                <div className={`w-2 h-2 rounded-full ${darkTheme ? 'bg-[#333]' : 'bg-gray-300'}`} />
-                                <div className={`w-2 h-2 rounded-full ${darkTheme ? 'bg-[#333]' : 'bg-gray-300'}`} />
-                            </div>
-
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center absolute right-12 ${arrowColor === 'white' ? 'bg-white text-black' : arrowColor === 'yellow' ? 'bg-[#F59E0B] text-black' : 'border border-[#444] text-[#444]'}`}>
-                                <span className="text-[10px]">&gt;</span>
-                            </div>
-                        </div>
                     )}
                 </div>
 
