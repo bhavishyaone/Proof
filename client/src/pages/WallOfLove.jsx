@@ -52,14 +52,9 @@ export default function WallOfLove() {
     setActiveLayout(layout);
     setSavingLayout(true);
     try {
-      await api.post(`/workspace/${activeSpace._id}/wall`, { layout });
-    } catch (err) {
-      if (err.response?.status === 400 || err.response?.status === 409) {
-        try {
-          await api.patch(`/workspace/${activeSpace._id}/wall`, { layout });
-        } catch (_) {}
-      }
-    } finally {
+      await api.patch(`/workspace/${activeSpace._id}/wall`, { layout });
+    } catch (_) {}
+    finally {
       setSavingLayout(false);
     }
   };
