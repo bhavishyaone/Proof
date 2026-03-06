@@ -115,7 +115,7 @@ export default function Login() {
                   <Input
                     type="email"
                     name="email"
-                    placeholder="name@company.com"
+                    placeholder="Enter Your Email Adress."
                     value={form.email}
                     onChange={handleChange}
                     className="bg-[#222222] border-[#2A2A2A] text-white placeholder:text-[#3D3D3D] focus-visible:ring-0 focus-visible:border-white transition-colors duration-150 rounded-lg"
@@ -132,7 +132,7 @@ export default function Login() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       name="password"
-                      placeholder="••••••••"
+                      placeholder="Enter Your Password"
                       value={form.password}
                       onChange={handleChange}
                       className="bg-[#222222] border-[#2A2A2A] text-white placeholder:text-[#3D3D3D] focus-visible:ring-0 focus-visible:border-white transition-colors duration-150 rounded-lg pr-10"
