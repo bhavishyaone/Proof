@@ -2,6 +2,13 @@ import Testimonial from "../models/Testimonial.js";
 import WallOfLove from "../models/WallOfLove.js";
 import Workspace from "../models/Workspace.js";
 
+
+const normalizeLayout = (layout) => {
+  if (layout === "animated") return "masonry-animated";
+  if (layout === "fixed") return "masonry-fixed";
+  return layout; 
+};
+
 export const getWallTestimonials = async(req,res)=>{
     try{
         const workspace = await Workspace.findById(req.params.id);
@@ -53,7 +60,8 @@ export const createWall = async(req,res)=>{
             return res.status(400).json({message:"Wall already existed."})
         }
 
-        const {layout,testimonialOrder} = req.body
+        const { layout: rawLayout, testimonialOrder } = req.body;
+        const layout = normalizeLayout(rawLayout);
 
         if (!testimonialOrder || !Array.isArray(testimonialOrder) || testimonialOrder.length === 0){
             return res.status(400).json({message:"At least one testimonial must be selected."})
@@ -157,8 +165,11 @@ export const updateWall = async (req, res) => {
       }
     });
 
-    if (updates.layout && !["masonry-animated", "masonry-fixed", "carousel", "animated", "fixed"].includes(updates.layout)) {
-      return res.status(400).json({ message: "Invalid layout." });
+    if (updates.layout) {
+      updates.layout = normalizeLayout(updates.layout);
+      if (!["masonry-animated", "masonry-fixed", "carousel"].includes(updates.layout)) {
+        return res.status(400).json({ message: "Invalid layout." });
+      }
     }
 
     if (updates.cardSize && !["small", "medium", "large"].includes(updates.cardSize)) {
@@ -168,7 +179,7 @@ export const updateWall = async (req, res) => {
     const updated = await WallOfLove.findOneAndUpdate(
       { workspaceId: req.params.id },
       { $set: { ...updates, workspaceId: req.params.id } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
+      { returnDocument: "after", upsert: true, setDefaultsOnInsert: true }
     );
 
     return res.status(200).json({
