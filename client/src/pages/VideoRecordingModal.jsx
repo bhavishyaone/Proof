@@ -357,7 +357,7 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Short description (optional)</label>
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Short description</label>
               <Textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
