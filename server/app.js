@@ -12,7 +12,9 @@ import wallRoutes from './src/routes/wall.routes.js'
 const app  = express()
 
 app.use(cors())
-app.use(helmet())
+app.use(helmet({
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
+}))
 app.use(express.json())
 
 app.use("/auth",authRoutes)

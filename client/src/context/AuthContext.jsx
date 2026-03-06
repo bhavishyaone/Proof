@@ -47,6 +47,17 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const googleLogin = useCallback(async (token) => {
+    try {
+      const res = await api.post("/auth/google", { token });
+      persist(res.data.token, res.data.user);
+      return { success: true };
+    } catch (err) {
+      const message = err.response?.data?.message || "Google login failed.";
+      return { success: false, message };
+    }
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -56,7 +67,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, isAuthenticated: Boolean(token), register, login, logout }}
+      value={{ token, user, isAuthenticated: Boolean(token), register, login, googleLogin, logout }}
     >
       {children}
     </AuthContext.Provider>

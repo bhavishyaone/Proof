@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useGoogleLogin } from '@react-oauth/google';
 import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
+  const { login, googleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/dashboard";
@@ -20,6 +21,21 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      setError("");
+      const result = await googleLogin(tokenResponse.access_token);
+      setLoading(false);
+      if (result.success) {
+        navigate(from, { replace: true });
+      } else {
+        setError(result.message);
+      }
+    },
+    onError: () => setError("Google login failed."),
+  });
 
   const submit = async (e) => {
     e.preventDefault();
@@ -88,6 +104,8 @@ export default function Login() {
                 type="button"
                 variant="outline"
                 className="w-full flex items-center justify-center gap-3 bg-white text-black border-white hover:bg-gray-100 hover:text-black font-medium py-5 rounded-lg text-sm mb-4"
+                onClick={() => loginWithGoogle()}
+                disabled={loading}
               >
                 <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

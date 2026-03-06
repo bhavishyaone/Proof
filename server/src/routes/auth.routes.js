@@ -1,4 +1,4 @@
-import {registerUser,loginUser}  from '../controllers/auth.controller.js';
+import {registerUser,loginUser,googleAuth}  from '../controllers/auth.controller.js';
 import express from 'express';
 import ratelimit from 'express-rate-limit';
 
@@ -18,6 +18,7 @@ const registerLimiter = ratelimit({
 
 router.post("/register", registerLimiter, registerUser);
 router.post("/login", loginLimiter, loginUser);
+router.post("/google", googleAuth);
 
 export default router;
 
