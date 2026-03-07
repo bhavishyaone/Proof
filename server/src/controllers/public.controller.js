@@ -84,7 +84,7 @@ export const submitTestimonial = async(req,res)=>{
 
 
         if(!message || message.length<30){
-            return res.status(400).json({message:"Message is not given properly"})
+            return res.status(400).json({message:"Message is of minimum 30 character length"})
         }
 
         if(!consent){

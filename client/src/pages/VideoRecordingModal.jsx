@@ -350,7 +350,7 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
+                  placeholder="Enter Your Email Address"
                   className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
                 />
               </div>
