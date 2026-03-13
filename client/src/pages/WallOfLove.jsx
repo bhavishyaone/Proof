@@ -66,7 +66,9 @@ export default function WallOfLove() {
       
       <aside className="w-64 bg-[#0A0A0A] flex flex-col h-full flex-shrink-0 hidden md:flex">
         <div className="p-6">
-          <h1 className="text-2xl font-extrabold tracking-tight mb-8">Proof</h1>
+          <Link to="/" className="block hover:opacity-80 transition-opacity">
+            <h1 className="text-2xl font-extrabold tracking-tight mb-8">Proof</h1>
+          </Link>
           
           <Link to="/dashboard" className="flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-8 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Dashboard

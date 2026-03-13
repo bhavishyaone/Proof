@@ -98,9 +98,9 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col font-sans text-white">
 
       <header className="flex items-center justify-between px-8 py-5 border-b border-[#1A1A1A]">
-        <div className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <span className="text-white font-bold text-lg tracking-tight">Proof</span>
-        </div>
+        </Link>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

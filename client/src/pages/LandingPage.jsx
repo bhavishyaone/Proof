@@ -168,9 +168,9 @@ export default function LandingPage() {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-[#1A1A1A]" : ""}`}>
         <div className="w-full mx-auto px-6 md:px-10 lg:px-14 h-16 flex items-center justify-between">
 
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="text-white font-bold text-lg tracking-tight">Proof</span>
-          </div>
+          </Link>
 
 
           <nav className="hidden md:flex items-center gap-8">

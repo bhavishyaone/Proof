@@ -71,8 +71,8 @@ export default function Register() {
 
       <div className="hidden lg:flex lg:w-1/2 flex-shrink-0 flex-col px-12 xl:px-24 py-12 bg-[#0A0A0A] relative overflow-hidden">
         
-        <div className="relative z-10 flex items-center gap-2">
-          <span className="text-white font-bold text-xl tracking-tight">Proof</span>
+        <div className="relative z-10 flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
+          <span className="text-white font-bold text-xl tracking-tight hover:text-gray-200 transition-colors">Proof</span>
         </div>
 
         <div className="relative z-10 flex-1 flex flex-col justify-center max-w-[600px]">
