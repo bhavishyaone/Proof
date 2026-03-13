@@ -118,6 +118,10 @@ export const loginUser = async(req,res)=>{
             return res.status(400).json({message:"User not found."})
         }
 
+        if(!user.password) {
+            return res.status(400).json({message:"Please login using Google Auth."})
+        }
+
 
 
         const compare = await bcrypt.compare(password,user.password)
