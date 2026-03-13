@@ -69,24 +69,18 @@ export default function Register() {
   return (
     <div className="min-h-screen flex overflow-hidden">
 
-      <div className="hidden lg:flex lg:w-1/2 flex-shrink-0 flex-col justify-between px-16 py-12 bg-[#0A0A0A] relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 flex-shrink-0 flex-col px-12 xl:px-24 py-12 bg-[#0A0A0A] relative overflow-hidden">
         
         <div className="relative z-10 flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center">
-            <span className="text-black font-black text-sm">P</span>
-          </div>
-          <span className="text-white font-bold text-lg tracking-tight">Proof</span>
+          <span className="text-white font-bold text-xl tracking-tight">Proof</span>
         </div>
 
-        <div className="relative z-10 my-auto py-12">
-          <h1 className="text-white font-black text-5xl leading-[1.1] mb-6 tracking-tight">
-            Turn your customers<br />into your best marketing.
-          </h1>
-          <p className="text-[#A0A0A0] text-lg mb-10 max-w-md leading-relaxed">
-            Proof makes it incredibly simple to collect both video and text testimonials, manage them in one place, and embed them anywhere.
-          </p>
+        <div className="relative z-10 flex-1 flex flex-col justify-center max-w-[600px]">
+          <h2 className="text-[#E0E0E0] text-3xl font-bold mb-12 leading-snug tracking-tight">
+            Proof makes it incredibly simple to collect both text and video, manage them in one place, and put them anywhere.
+          </h2>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             {benefits.map((item, idx) => (
               <div key={idx} className="flex gap-4">
                 <div className="mt-1 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -104,7 +98,7 @@ export default function Register() {
       </div>
 
       <div className="w-full lg:w-1/2 flex-shrink-0 flex items-center justify-center p-8 bg-[#111111]">
-        <div className="w-full max-w-[420px]">
+        <div className="w-full max-w-[480px]">
 
           <Card className="bg-[#1A1A1A] border-[#2A2A2A] rounded-2xl shadow-none">
             <CardContent className="p-8">
