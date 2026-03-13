@@ -50,7 +50,7 @@ const STEPS = [
   {
     num: "02",
     title: "Share the link",
-    body: "Every space gets a unique public URL like proof.app/your-brand. Send it via email, paste it in a Slack message, or add it to your website — customers fill it out in seconds.",
+    body: "Every space gets a unique public URL. Send it via email, paste it in a Slack message, or add it to your website — customers fill it out in seconds.",
   },
   {
     num: "03",
@@ -166,12 +166,9 @@ export default function LandingPage() {
 
 
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-[#1A1A1A]" : ""}`}>
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="w-full mx-auto px-6 md:px-10 lg:px-14 h-16 flex items-center justify-between">
 
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center">
-              <span className="text-black font-black text-sm">P</span>
-            </div>
             <span className="text-white font-bold text-lg tracking-tight">Proof</span>
           </div>
 
@@ -212,7 +209,7 @@ export default function LandingPage() {
             ))}
             <div className="pt-2 flex flex-col gap-2">
               <Link to="/login" className="text-center text-[#6B6B6B] text-sm py-2 border border-[#2A2A2A] rounded-xl">Sign in</Link>
-              <Link to="/register" className="text-center btn-white text-sm font-semibold py-2 rounded-xl">Get started free</Link>
+              <Link to="/register" className="text-center btn-white text-sm font-semibold py-2 rounded-xl">Get started today</Link>
             </div>
           </div>
         )}
@@ -220,26 +217,26 @@ export default function LandingPage() {
 
 
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        <div className="max-w-3xl mx-auto text-center relative">
+        <div className="max-w-7xl mx-auto text-center relative px-4 md:px-0">
 
 
 
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-white">
+          <h1 className="text-5xl md:text-7xl lg:text-[80px] font-black tracking-tight leading-[1.05] mb-6 text-white">
             Collect testimonials{" "}
             <span className="text-white">your customers</span>{" "}
             actually leave
           </h1>
 
 
-          <p className="text-lg md:text-xl text-[#6B6B6B] max-w-xl mx-auto leading-relaxed mb-10">
+          <p className="text-lg md:text-xl lg:text-2xl text-[#6B6B6B] max-w-3xl mx-auto leading-relaxed mb-10">
             Share a link. Get video and text testimonials in minutes. Manage them in your inbox, then embed a stunning Wall of Love on any website — no code required.
           </p>
 
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
             <Link to="/register" className="btn-white font-bold text-base px-8 py-3.5 rounded-2xl">
-              Start collecting — it's free
+              Start collecting testimonials
             </Link>
             <button onClick={() => scrollTo("#how-it-works")} className="btn-ghost text-[#6B6B6B] text-base font-medium px-6 py-3.5 rounded-2xl border border-[#2A2A2A]">
               See how it works →
@@ -248,18 +245,18 @@ export default function LandingPage() {
 
 
           <div className="flex items-center justify-center gap-6 text-sm text-[#6B6B6B]">
-            <span className="flex items-center gap-1.5"><span className="text-white">✓</span> No Payment Required</span>
+            <span className="flex items-center gap-1.5"><span className="text-white">✓</span> No coding required</span>
             <span className="hidden sm:block w-1 h-1 bg-[#2A2A2A] rounded-full" />
-            <span className="flex items-center gap-1.5"><span className="text-white">✓</span> Free to start</span>
+            <span className="flex items-center gap-1.5"><span className="text-white">✓</span> Unlimited Wall of Love views</span>
             <span className="hidden sm:block w-1 h-1 bg-[#2A2A2A] rounded-full" />
             <span className="flex items-center gap-1.5"><span className="text-white">✓</span> Instant embed</span>
           </div>
         </div>
 
 
-        <div className="relative mt-20 max-w-4xl mx-auto">
+        <div className="relative mt-20 max-w-7xl mx-auto px-4 md:px-0">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0A0A0A] z-10 pointer-events-none" />
-          <div className="grid grid-cols-3 gap-4 opacity-60">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 opacity-60">
             {[
               { name: "Tanubhav Katiyar", text: "Incredible tool. Got my first testimonial in under 5 minutes.", stars: 4, delay: "floating-d1" },
               { name: "Ganesh Wayal.", text: "The embed wall looks so professional on my site.", stars: 5, delay: "floating-d2" },
@@ -281,8 +278,8 @@ export default function LandingPage() {
       </section>
 
 
-      <section id="features" className="py-24 px-6 bg-[#111111]">
-        <div className="max-w-6xl mx-auto">
+      <section id="features" className="py-16 px-6 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-[#6B6B6B] font-semibold text-xs tracking-widest uppercase mb-3">Features</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-white">Everything you need to<br />build social proof</h2>
@@ -292,7 +289,6 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {FEATURES.map((f, i) => (
               <div key={i} className="card-hover bg-[#0A0A0A] border border-[#2A2A2A] rounded-2xl p-7">
-                <div className="w-11 h-11 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center text-xl mb-5">{f.icon}</div>
                 <h3 className="text-white font-bold text-lg mb-2">{f.title}</h3>
                 <p className="text-[#6B6B6B] text-sm leading-relaxed">{f.desc}</p>
               </div>
@@ -302,8 +298,8 @@ export default function LandingPage() {
       </section>
 
 
-      <section id="how-it-works" className="py-24 px-6 bg-[#0A0A0A]">
-        <div className="max-w-5xl mx-auto">
+      <section id="how-it-works" className="py-16 px-6 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-[#6B6B6B] font-semibold text-xs tracking-widest uppercase mb-3">Process</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-white">Up and running<br />in three steps</h2>
@@ -327,8 +323,8 @@ export default function LandingPage() {
       </section>
 
 
-      <section className="py-24 px-6 bg-[#111111]">
-        <div className="max-w-5xl mx-auto">
+      <section className="py-24 px-6 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto">
           <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-3xl p-10 md:p-14">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
@@ -378,7 +374,7 @@ export default function LandingPage() {
 
 
       <section id="testimonials" className="py-24 px-6 bg-[#0A0A0A]">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-[#6B6B6B] font-semibold text-xs tracking-widest uppercase mb-3">From our users</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-white">What people are saying</h2>
@@ -408,8 +404,8 @@ export default function LandingPage() {
       </section>
 
 
-      <section id="faq" className="py-24 px-6 bg-[#111111]">
-        <div className="max-w-2xl mx-auto">
+      <section id="faq" className="py-16 px-6 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-[#6B6B6B] font-semibold text-xs tracking-widest uppercase mb-3">FAQ</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-white">Common questions</h2>
@@ -435,9 +431,9 @@ export default function LandingPage() {
       </section>
 
 
-      <section className="py-24 px-6 bg-[#0A0A0A]">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-3xl p-12 md:p-16 text-center">
+      <section className="pt-16 pb-16 px-6 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto px-4 md:px-0">
+          <div className="text-center">
             <p className="text-[#6B6B6B] font-semibold text-xs tracking-widest uppercase mb-4">Get started today</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-5 text-white">
               Turn happy customers<br />into your best marketing
@@ -448,7 +444,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/register" className="btn-white font-bold text-base px-10 py-4 rounded-2xl w-full sm:w-auto">
-                Create your free account
+                Create your account
               </Link>
               <Link to="/login" className="btn-ghost text-[#6B6B6B] text-base font-medium px-8 py-4 rounded-2xl border border-[#2A2A2A] w-full sm:w-auto">
                 Sign in
@@ -460,48 +456,11 @@ export default function LandingPage() {
       </section>
 
 
-      <footer className="border-t border-[#1A1A1A] py-12 px-6 bg-[#0A0A0A]">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start justify-between gap-10 mb-10">
+      <footer className="pt-0 pb-8 px-6 bg-[#0A0A0A]">
+        <div className="w-full mx-auto px-4 md:px-8 lg:px-14">
 
-            <div className="max-w-xs">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center">
-                  <span className="text-black font-black text-sm">P</span>
-                </div>
-                <span className="text-white font-bold text-lg">Proof</span>
-              </div>
-              <p className="text-[#6B6B6B] text-sm leading-relaxed">
-                Collect video and text testimonials from your customers. Build trust. Grow faster.
-              </p>
-            </div>
-
-
-            <div className="grid grid-cols-2 gap-10">
-              <div>
-                <p className="text-white font-semibold text-sm mb-4">Product</p>
-                <ul className="space-y-3">
-                  <li><button onClick={() => scrollTo("#features")} className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Features</button></li>
-                  <li><button onClick={() => scrollTo("#how-it-works")} className="text-[#6B6B6B] hover:text-white text-sm transition-colors">How it works</button></li>
-                  <li><button onClick={() => scrollTo("#faq")} className="text-[#6B6B6B] hover:text-white text-sm transition-colors">FAQ</button></li>
-                </ul>
-              </div>
-              <div>
-                <p className="text-white font-semibold text-sm mb-4">Account</p>
-                <ul className="space-y-3">
-                  <li><Link to="/register" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Sign up</Link></li>
-                  <li><Link to="/login" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Sign in</Link></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[#1A1A1A] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="border-t border-[#1A1A1A] pt-6 flex justify-center">
             <p className="text-[#6B6B6B] text-xs">© 2026 Proof. All rights reserved.</p>
-            <div className="flex items-center gap-1.5 text-[#6B6B6B] text-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-white opacity-60" />
-              All systems operational
-            </div>
           </div>
         </div>
       </footer>

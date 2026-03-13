@@ -52,30 +52,55 @@ export default function Register() {
   };
 
   const benefits = [
-    "Free forever plan",
-    "No Payment Required",
-    "Joined by 100+ Businesses",
+    {
+      title: "Effortless Collection",
+      desc: "Get text and video testimonials with a simple link."
+    },
+    {
+      title: "Wall of Love & Widgets",
+      desc: "Embed beautiful testimonial carousels on any website."
+    },
+    {
+      title: "Powerful Moderation",
+      desc: "Approve, reject, and organize everything from your inbox."
+    }
   ];
 
   return (
     <div className="min-h-screen flex overflow-hidden">
 
-      <div className="hidden lg:flex lg:w-1/2 flex-shrink-0 flex-col justify-center gap-8 px-16 py-12 bg-[#0A0A0A]">
-
-
-        <div>
-          <h1 className="text-white font-extrabold text-4xl leading-tight mb-6">
-            Start collecting<br />testimonials today
-          </h1>
-          <ul className="space-y-4">
-            {benefits.map((item) => (
-              <li key={item} className="flex items-center gap-3 text-white text-base font-medium">
-                <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0" strokeWidth={2.5} />
-                {item}
-              </li>
-            ))}
-          </ul>
+      <div className="hidden lg:flex lg:w-1/2 flex-shrink-0 flex-col justify-between px-16 py-12 bg-[#0A0A0A] relative overflow-hidden">
+        
+        <div className="relative z-10 flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center">
+            <span className="text-black font-black text-sm">P</span>
+          </div>
+          <span className="text-white font-bold text-lg tracking-tight">Proof</span>
         </div>
+
+        <div className="relative z-10 my-auto py-12">
+          <h1 className="text-white font-black text-5xl leading-[1.1] mb-6 tracking-tight">
+            Turn your customers<br />into your best marketing.
+          </h1>
+          <p className="text-[#A0A0A0] text-lg mb-10 max-w-md leading-relaxed">
+            Proof makes it incredibly simple to collect both video and text testimonials, manage them in one place, and embed them anywhere.
+          </p>
+
+          <div className="space-y-6">
+            {benefits.map((item, idx) => (
+              <div key={idx} className="flex gap-4">
+                <div className="mt-1 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold text-base mb-1">{item.title}</h3>
+                  <p className="text-[#6B6B6B] text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
 
       <div className="w-full lg:w-1/2 flex-shrink-0 flex items-center justify-center p-8 bg-[#111111]">
