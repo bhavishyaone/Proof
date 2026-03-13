@@ -5,8 +5,6 @@ export default function ThankYou({ theme = "dark" }) {
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center p-4 font-sans relative overflow-hidden transition-colors duration-300 ${theme === "dark" ? "bg-[#0A0A0A]" : "bg-gray-50"}`}>
       
-      <div className={`absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none ${theme === "dark" ? "bg-white/5" : "bg-black/5"}`} />
-      <div className={`absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none ${theme === "dark" ? "bg-white/5" : "bg-black/5"}`} />
 
       <div className="flex flex-col items-center justify-center text-center z-10 max-w-lg mx-auto w-full px-4">
         
@@ -17,7 +15,7 @@ export default function ThankYou({ theme = "dark" }) {
         </div>
         
         <h1 className={`text-3xl md:text-4xl font-extrabold mb-4 tracking-tight ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-          Thank you for your testimonial! 🎊
+          Thank you for your testimonial! 
         </h1>
         
         <p className={`text-base md:text-lg leading-relaxed max-w-md ${theme === "dark" ? "text-[#888888]" : "text-gray-500"}`}>

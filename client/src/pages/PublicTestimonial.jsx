@@ -63,9 +63,6 @@ export default function PublicTestimonial() {
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center p-4 font-sans relative overflow-hidden transition-colors duration-300 ${theme === "dark" ? "bg-[#0A0A0A]" : "bg-gray-50"}`}>
 
-      <div className={`absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none ${theme === "dark" ? "bg-white/5" : "bg-black/5"}`} />
-      <div className={`absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none ${theme === "dark" ? "bg-white/5" : "bg-black/5"}`} />
-
       <div className="absolute top-8 left-8">
         <a href="/" className="block hover:opacity-80 transition-opacity">
           <h1 className={`text-2xl font-bold tracking-tight ${theme === "dark" ? "text-white" : "text-gray-900"}`}>Proof</h1>
