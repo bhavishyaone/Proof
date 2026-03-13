@@ -267,20 +267,34 @@ export default function EditSpace() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <div className="w-full border border-[#5D5FEF] rounded-md p-2.5 text-sm text-gray-900 font-medium bg-white shadow-sm cursor-pointer flex justify-between items-center ring-2 ring-[#5D5FEF]/20">
-                          Name, email 
+                          {form.collectName && form.collectEmail ? "Name, email" : form.collectName ? "Name" : "Email"} 
                           <span className="text-gray-900 text-xs">▼</span>
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-[320px] bg-white border border-gray-100 shadow-xl rounded-xl p-0" align="start">
                         <div className="flex items-center justify-between p-4 border-b border-gray-100">
                           <div className="flex items-center gap-3">
-                            <Switch checked={form.collectName} onCheckedChange={(val) => setForm({...form, collectName: val})} className="data-[state=checked]:bg-[#5D5FEF] data-[state=unchecked]:bg-gray-200 scale-90" />
+                            <Switch 
+                              checked={form.collectName} 
+                              onCheckedChange={(val) => {
+                                if (!val && !form.collectEmail) return; // Prevent turning off both
+                                setForm({...form, collectName: val});
+                              }} 
+                              className="data-[state=checked]:bg-[#5D5FEF] data-[state=unchecked]:bg-gray-200 scale-90" 
+                            />
                             <span className="text-sm text-gray-900 font-medium">Name</span>
                           </div>
                         </div>
                         <div className="flex items-center justify-between p-4">
                           <div className="flex items-center gap-3">
-                            <Switch checked={form.collectEmail} onCheckedChange={(val) => setForm({...form, collectEmail: val})} className="data-[state=checked]:bg-[#5D5FEF] data-[state=unchecked]:bg-gray-200 scale-90" />
+                            <Switch 
+                              checked={form.collectEmail} 
+                              onCheckedChange={(val) => {
+                                if (!val && !form.collectName) return; // Prevent turning off both
+                                setForm({...form, collectEmail: val});
+                              }} 
+                              className="data-[state=checked]:bg-[#5D5FEF] data-[state=unchecked]:bg-gray-200 scale-90" 
+                            />
                             <span className="text-sm text-gray-900 font-medium">Email</span>
                           </div>
                         </div>

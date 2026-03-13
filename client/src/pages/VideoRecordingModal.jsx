@@ -26,6 +26,8 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [rating, setRating] = useState(5);
+  const [hoveredRating, setHoveredRating] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -179,14 +181,18 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
 
   const handleSubmit = async () => {
     setError("");
-    if (!name.trim()) return setError("Your name is required.");
-    if (!email.trim()) return setError("Your email is required.");
+    if (space?.collectName !== false && !name.trim()) return setError("Your name is required.");
+    if (space?.collectEmail !== false && !email.trim()) return setError("Your email is required.");
 
     const formData = new FormData();
     formData.append("type", "video");
     formData.append("name", name.trim());
     formData.append("email", email.trim());
-    formData.append("rating", "5");
+    if (space?.allowStarRating !== false) {
+      formData.append("rating", rating.toString());
+    } else {
+      formData.append("rating", "5");
+    }
     formData.append("message", message.trim() || "Video testimonial submission.");
     formData.append("consent", "true");
 
@@ -334,27 +340,58 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
         {isReviewing || fileObject ? (
           <div className="w-full flex flex-col gap-3 mb-4">
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Name <span className="text-red-500">*</span></label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Email <span className="text-red-500">*</span></label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter Your Email Address"
-                  className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
-                />
-              </div>
+            <div className={`grid ${space?.collectName !== false && space?.collectEmail !== false ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
+              {space?.collectName !== false && (
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Name <span className="text-red-500">*</span></label>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
+                  />
+                </div>
+              )}
+              {space?.collectEmail !== false && (
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Email <span className="text-red-500">*</span></label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter Your Email Address"
+                    className="bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10 text-sm"
+                  />
+                </div>
+              )}
             </div>
+
+            {space?.allowStarRating !== false && (
+              <div className="mb-1">
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Rating</label>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoveredRating(star)}
+                      onMouseLeave={() => setHoveredRating(0)}
+                      className={`w-6 h-6 cursor-pointer transition-colors ${
+                        star <= (hoveredRating || rating)
+                          ? "fill-amber-500 text-amber-500"
+                          : "fill-transparent text-[#444] stroke-current stroke-2"
+                      }`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Short description</label>

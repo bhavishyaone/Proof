@@ -25,8 +25,8 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
 
   const handleSend = async () => {
     setError("");
-    if (!name.trim()) return setError("Your name is required.");
-    if (!email.trim()) return setError("Your email is required.");
+    if (space?.collectName !== false && !name.trim()) return setError("Your name is required.");
+    if (space?.collectEmail !== false && !email.trim()) return setError("Your email is required.");
     if (testimonial.trim().length < 30) return setError("Testimonial must be at least 30 characters.");
     if (!permissionGranted) return setError("You must grant permission to submit.");
 
@@ -107,21 +107,23 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
         </div>
 
 
-        <div className="flex items-center gap-1 mb-6">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              className={`w-7 h-7 cursor-pointer transition-colors ${
-                star <= (hoveredRating || rating)
-                  ? "fill-amber-500 text-amber-500"
-                  : "fill-transparent text-[#444]"
-              }`}
-              onMouseEnter={() => setHoveredRating(star)}
-              onMouseLeave={() => setHoveredRating(0)}
-              onClick={() => setRating(star)}
-            />
-          ))}
-        </div>
+        {space?.allowStarRating !== false && (
+          <div className="flex items-center gap-1 mb-6">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`w-7 h-7 cursor-pointer transition-colors ${
+                  star <= (hoveredRating || rating)
+                    ? "fill-amber-500 text-amber-500"
+                    : "fill-transparent text-[#444]"
+                }`}
+                onMouseEnter={() => setHoveredRating(star)}
+                onMouseLeave={() => setHoveredRating(0)}
+                onClick={() => setRating(star)}
+              />
+            ))}
+          </div>
+        )}
 
 
         <Textarea 
@@ -152,28 +154,32 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="space-y-2">
-            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Your Name <span className="text-red-500">*</span>
-            </label>
-            <Input 
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Your Email <span className="text-red-500">*</span>
-            </label>
-            <Input 
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10"
-            />
-          </div>
+        <div className={`grid grid-cols-1 ${space?.collectName !== false && space?.collectEmail !== false ? 'md:grid-cols-2' : ''} gap-4 mb-6`}>
+          {space?.collectName !== false && (
+            <div className="space-y-2">
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                Your Name <span className="text-red-500">*</span>
+              </label>
+              <Input 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10"
+              />
+            </div>
+          )}
+          {space?.collectEmail !== false && (
+            <div className="space-y-2">
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                Your Email <span className="text-red-500">*</span>
+              </label>
+              <Input 
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-[#111111] border-[#2A2A2A] text-white focus-visible:ring-1 focus-visible:ring-gray-600 rounded-lg h-10"
+              />
+            </div>
+          )}
         </div>
 
         <div className="mb-8">
