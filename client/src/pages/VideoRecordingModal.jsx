@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { track } from "../analytics.jsx";
 
 export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    track("video_testimonial_modal_view", { spaceSlug });
     async function getDevices() {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
@@ -114,6 +116,7 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
 
   const startRecording = () => {
     if (!stream) return;
+    track("video_recording_started", { spaceSlug });
     setIsRecording(true);
     setRecordedChunks([]);
     setRecordTime(0);
@@ -150,6 +153,7 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
   };
 
   const handleRetake = async () => {
+    track("video_recording_retake", { spaceSlug });
     setRecordedChunks([]);
     setFileObject(null);
     setIsReviewing(false);
@@ -213,9 +217,11 @@ export default function VideoRecordingModal({ onClose, spaceSlug, space }) {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (stream) stream.getTracks().forEach(track => track.stop());
+      track("video_testimonial_submitted", { spaceSlug, rating, method: fileObject ? "upload" : "record" });
       onClose();
       navigate("/thank-you");
     } catch (err) {
+      track("video_testimonial_error", { spaceSlug, error: err.response?.data?.message || err.message });
       setError(err.response?.data?.message || "Submission failed. Please try again.");
     } finally {
       setSubmitting(false);

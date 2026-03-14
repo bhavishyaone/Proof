@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from '@react-oauth/google';
+import { track } from "../analytics.jsx";
 import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,10 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    track("register_page_view");
+  }, []);
+
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const loginWithGoogle = useGoogleLogin({
@@ -27,12 +32,17 @@ export default function Register() {
       const result = await googleLogin(tokenResponse.access_token);
       setLoading(false);
       if (result.success) {
+        track("register_success", { method: "google" });
         navigate("/dashboard", { replace: true });
       } else {
+        track("register_error", { method: "google", error: result.message });
         setError(result.message);
       }
     },
-    onError: () => setError("Google signup failed."),
+    onError: () => {
+      track("register_error", { method: "google", error: "Google signup failed" });
+      setError("Google signup failed.");
+    },
   });
 
   const submit = async (e) => {
@@ -45,8 +55,10 @@ export default function Register() {
     const result = await register(form.name, form.email, form.password);
     setLoading(false);
     if (result.success) {
+      track("register_success", { method: "email" });
       navigate("/dashboard", { replace: true });
     } else {
+      track("register_error", { method: "email", error: result.message });
       setError(result.message);
     }
   };

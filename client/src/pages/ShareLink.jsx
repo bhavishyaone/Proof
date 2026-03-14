@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Inbox, Heart, Edit, Share2, Copy, Check, Link as LinkIcon } from "lucide-react";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 
 export default function ShareLink() {
   const [copied, setCopied] = useState(false);
@@ -10,7 +11,12 @@ export default function ShareLink() {
   const spaceInitial = spaceName.charAt(0).toUpperCase();
   const publicUrl = `${window.location.origin}/${activeSpace?.slug || ""}`;
 
+  React.useEffect(() => {
+    track("share_link_page_view");
+  }, []);
+
   const copyToClipboard = () => {
+    track("share_link_copied");
     navigator.clipboard.writeText(publicUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

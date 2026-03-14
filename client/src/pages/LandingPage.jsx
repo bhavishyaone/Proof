@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { track } from '../analytics.jsx';
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
@@ -116,6 +117,7 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    track('Home_page_view');
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -175,7 +177,10 @@ export default function LandingPage() {
 
           <nav className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((l) => (
-              <button key={l.label} onClick={() => scrollTo(l.href)} className="text-[#6B6B6B] hover:text-white text-sm font-medium transition-colors">
+              <button key={l.label} onClick={() => {
+                track("landing_header_nav_click", { link: l.label });
+                scrollTo(l.href);
+              }} className="text-[#6B6B6B] hover:text-white text-sm font-medium transition-colors">
                 {l.label}
               </button>
             ))}
@@ -183,16 +188,19 @@ export default function LandingPage() {
 
 
           <div className="hidden md:flex items-center gap-3">
-            <Link to="/login" className="btn-ghost text-[#6B6B6B] text-sm font-medium px-4 py-2 rounded-lg">
+            <Link to="/login" onClick={() => track("landing_login_click")} className="btn-ghost text-[#6B6B6B] text-sm font-medium px-4 py-2 rounded-lg">
               Sign in
             </Link>
-            <Link to="/register" className="btn-white text-sm font-semibold px-5 py-2 rounded-xl">
+            <Link to="/register" onClick={() => track("landing_get_started_click")} className="btn-white text-sm font-semibold px-5 py-2 rounded-xl">
               Get started 
             </Link>
           </div>
 
 
-          <button className="md:hidden text-[#6B6B6B] hover:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className="md:hidden text-[#6B6B6B] hover:text-white" onClick={() => {
+            track("landing_mobile_menu_toggle", { state: !mobileMenuOpen ? "open" : "close" });
+            setMobileMenuOpen(!mobileMenuOpen);
+          }}>
             <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               {mobileMenuOpen ? <path d="M6 18L18 6M6 6l12 12" /> : <path d="M3 12h18M3 6h18M3 18h18" />}
             </svg>
@@ -208,8 +216,8 @@ export default function LandingPage() {
               </button>
             ))}
             <div className="pt-2 flex flex-col gap-2">
-              <Link to="/login" className="text-center text-[#6B6B6B] text-sm py-2 border border-[#2A2A2A] rounded-xl">Sign in</Link>
-              <Link to="/register" className="text-center btn-white text-sm font-semibold py-2 rounded-xl">Get started today</Link>
+              <Link to="/login" onClick={() => track("landing_login_click_mobile")} className="text-center text-[#6B6B6B] text-sm py-2 border border-[#2A2A2A] rounded-xl">Sign in</Link>
+              <Link to="/register" onClick={() => track("landing_get_started_click_mobile")} className="text-center btn-white text-sm font-semibold py-2 rounded-xl">Get started today</Link>
             </div>
           </div>
         )}
@@ -235,10 +243,10 @@ export default function LandingPage() {
 
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
-            <Link to="/register" className="btn-white font-bold text-base px-8 py-3.5 rounded-2xl">
+            <Link to="/register" onClick={() => track("landing_hero_cta_click")} className="btn-white font-bold text-base px-8 py-3.5 rounded-2xl">
               Start collecting testimonials
             </Link>
-            <button onClick={() => scrollTo("#how-it-works")} className="btn-ghost text-[#6B6B6B] text-base font-medium px-6 py-3.5 rounded-2xl border border-[#2A2A2A]">
+            <button onClick={() => { track("landing_how_it_works_click"); scrollTo("#how-it-works"); }} className="btn-ghost text-[#6B6B6B] text-base font-medium px-6 py-3.5 rounded-2xl border border-[#2A2A2A]">
               See how it works →
             </button>
           </div>
@@ -414,7 +422,11 @@ export default function LandingPage() {
 
           <div className="space-y-3">
             {FAQS.map((f, i) => (
-              <div key={i} onClick={() => setOpenFaq(openFaq === i ? null : i)} className="faq-item bg-[#0A0A0A] border border-[#2A2A2A] rounded-2xl cursor-pointer overflow-hidden">
+              <div key={i} onClick={() => {
+                const newState = openFaq === i ? null : i;
+                if (newState !== null) track("landing_faq_toggle", { question: f.q });
+                setOpenFaq(newState);
+              }} className="faq-item bg-[#0A0A0A] border border-[#2A2A2A] rounded-2xl cursor-pointer overflow-hidden">
                 <div className="flex items-center justify-between px-6 py-5">
                   <p className="text-white font-semibold text-sm pr-4">{f.q}</p>
                   <span className={`text-white text-lg font-light flex-shrink-0 transition-transform duration-200 ${openFaq === i ? "rotate-45" : ""}`}>+</span>
@@ -443,10 +455,10 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/register" className="btn-white font-bold text-base px-10 py-4 rounded-2xl w-full sm:w-auto">
+              <Link to="/register" onClick={() => track("landing_bottom_cta_click")} className="btn-white font-bold text-base px-10 py-4 rounded-2xl w-full sm:w-auto">
                 Create your account
               </Link>
-              <Link to="/login" className="btn-ghost text-[#6B6B6B] text-base font-medium px-8 py-4 rounded-2xl border border-[#2A2A2A] w-full sm:w-auto">
+              <Link to="/login" onClick={() => track("landing_bottom_login_click")} className="btn-ghost text-[#6B6B6B] text-base font-medium px-8 py-4 rounded-2xl border border-[#2A2A2A] w-full sm:w-auto">
                 Sign in
               </Link>
             </div>

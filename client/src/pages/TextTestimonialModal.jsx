@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { track } from "../analytics.jsx";
 
 export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
   const spaceName = space?.name || "this space";
@@ -23,6 +24,10 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
   const userPhotoRef = useRef(null);
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    track("text_testimonial_modal_view", { spaceSlug });
+  }, [spaceSlug]);
+
   const handleSend = async () => {
     setError("");
     if (space?.collectName !== false && !name.trim()) return setError("Your name is required.");
@@ -40,9 +45,11 @@ export default function TextTestimonialModal({ onClose, spaceSlug, space }) {
         message: testimonial.trim(),
         consent: true,
       });
+      track("text_testimonial_submitted", { spaceSlug, rating });
       onClose();
       navigate("/thank-you");
     } catch (err) {
+      track("text_testimonial_error", { spaceSlug, error: err.response?.data?.message || err.message });
       setError(err.response?.data?.message || "Submission failed. Please try again.");
     } finally {
       setSubmitting(false);

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import api from "../lib/api";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 
 export default function CreateSpaceModal({ onClose }) {
   const { selectSpace } = useContext(SpaceContext);
@@ -41,6 +42,10 @@ export default function CreateSpaceModal({ onClose }) {
     "Video only": "video",
   };
 
+  React.useEffect(() => {
+    track("create_space_modal_view");
+  }, []);
+
   const handleSubmit = async () => {
     setError("");
     if (!form.spaceName.trim()) return setError("Space name is required.");
@@ -63,9 +68,11 @@ export default function CreateSpaceModal({ onClose }) {
       const res = await api.post("/workspace", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      track("space_created_success", { spaceName: form.spaceName });
       selectSpace(res.data.workspace);
       navigate("/space-success");
     } catch (err) {
+      track("space_created_error", { error: err.response?.data?.message || err.message });
       setError(err.response?.data?.message || "Failed to create space. Please try again.");
     } finally {
       setSubmitting(false);

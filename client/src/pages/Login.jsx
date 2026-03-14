@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useGoogleLogin } from '@react-oauth/google';
+import { track } from "../analytics.jsx";
 import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    track("login_page_view");
+  }, []);
+
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const loginWithGoogle = useGoogleLogin({
@@ -29,12 +34,17 @@ export default function Login() {
       const result = await googleLogin(tokenResponse.access_token);
       setLoading(false);
       if (result.success) {
+        track("login_success", { method: "google" });
         navigate(from, { replace: true });
       } else {
+        track("login_error", { method: "google", error: result.message });
         setError(result.message);
       }
     },
-    onError: () => setError("Google login failed."),
+    onError: () => {
+      track("login_error", { method: "google", error: "Google login failed" });
+      setError("Google login failed.");
+    },
   });
 
   const submit = async (e) => {
@@ -46,8 +56,10 @@ export default function Login() {
     const result = await login(form.email, form.password);
     setLoading(false);
     if (result.success) {
+      track("login_success", { method: "email" });
       navigate(from, { replace: true });
     } else {
+      track("login_error", { method: "email", error: result.message });
       setError(result.message);
     }
   };

@@ -2,8 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Ghost } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { track } from "../analytics.jsx";
 
 export default function NotFound() {
+  React.useEffect(() => {
+    track("404_page_view", { url: window.location.pathname });
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white font-sans flex flex-col items-center justify-center relative overflow-hidden">
 

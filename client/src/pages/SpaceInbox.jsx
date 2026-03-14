@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 import api from "../lib/api";
 
 const FilterButton = ({ active, label, onClick }) => (
@@ -40,6 +41,7 @@ export default function SpaceInbox() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
+    track("inbox_view");
     if (!activeSpace?._id) return;
     const fetchTestimonials = async () => {
       setLoading(true);
@@ -60,37 +62,44 @@ export default function SpaceInbox() {
   };
 
   const handleApprove = async (id) => {
+    track("testimonial_approved", { testimonialId: id });
     await api.patch(`/testimonials/${id}/approve`);
     updateLocal(id, { status: "approved" });
   };
 
   const handleUnapprove = async (id) => {
+    track("testimonial_unapproved", { testimonialId: id });
     await api.patch(`/testimonials/${id}/reject`);
     updateLocal(id, { status: "pending" });
   };
 
   const handleReject = async (id) => {
+    track("testimonial_rejected", { testimonialId: id });
     await api.patch(`/testimonials/${id}/reject`);
     updateLocal(id, { status: "rejected" });
   };
 
   const toggleLike = async (id) => {
     const t = testimonials.find(t => t._id === id);
+    track(t.liked ? "testimonial_unliked" : "testimonial_liked", { testimonialId: id });
     await api.patch(`/testimonials/${id}/like`);
     updateLocal(id, { liked: !t.liked });
   };
 
   const handleArchive = async (id) => {
+    track("testimonial_archived", { testimonialId: id });
     await api.patch(`/testimonials/${id}/archive`);
     updateLocal(id, { archived: true });
   };
 
   const handleSpam = async (id) => {
+    track("testimonial_marked_spam", { testimonialId: id });
     await api.patch(`/testimonials/${id}/spam`);
     updateLocal(id, { spam: true });
   };
 
   const handleDelete = async (id) => {
+    track("testimonial_deleted", { testimonialId: id });
     await api.delete(`/testimonials/${id}`);
     setTestimonials(prev => prev.filter(t => t._id !== id));
   };

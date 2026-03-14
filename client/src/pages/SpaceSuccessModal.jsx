@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { X, Copy, Check, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 
 export default function SpaceSuccessModal() {
   const [copied, setCopied] = useState(false);
@@ -12,7 +13,12 @@ export default function SpaceSuccessModal() {
   const spaceName = activeSpace?.name || "Your Space";
   const publicUrl = `${window.location.origin}/${activeSpace?.slug || ""}`;
 
+  React.useEffect(() => {
+    track("space_success_modal_view");
+  }, []);
+
   const copyToClipboard = () => {
+    track("space_success_link_copied");
     navigator.clipboard.writeText(publicUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

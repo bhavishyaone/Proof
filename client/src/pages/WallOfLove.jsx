@@ -3,6 +3,7 @@ import { ArrowLeft, Inbox, Heart, Edit, Share2, GripVertical, Layers, Columns, L
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 import api from "../lib/api";
 
 
@@ -18,6 +19,9 @@ export default function WallOfLove() {
   const [loading, setLoading] = useState(true);
   const [savingLayout, setSavingLayout] = useState(false);
 
+  useEffect(() => {
+    track("wall_of_love_view");
+  }, []);
 
   useEffect(() => {
     if (!activeSpace?._id) return;
@@ -49,6 +53,7 @@ export default function WallOfLove() {
 
 
   const handleLayoutSelect = async (layout) => {
+    track("wall_layout_selected", { layout });
     setActiveLayout(layout);
     setSavingLayout(true);
     try {
@@ -322,7 +327,7 @@ export default function WallOfLove() {
 
             <div className="flex justify-center mb-24 mt-6">
                 <Button
-                  onClick={() => navigate("/wall-configuration", { state: { layout: activeLayout } })}
+                  onClick={() => { track("create_wall_click"); navigate("/wall-configuration", { state: { layout: activeLayout } })}}
                   disabled={savingLayout}
                   className="bg-white text-black hover:bg-gray-200 font-extrabold px-12 py-7 text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
                 >

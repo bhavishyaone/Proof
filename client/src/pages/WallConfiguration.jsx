@@ -4,6 +4,7 @@ import { ArrowLeft, Inbox, Heart, Edit, Share2, CheckCircle2, Loader2 } from "lu
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 import api from "../lib/api";
 
 export default function WallConfiguration() {
@@ -28,6 +29,10 @@ export default function WallConfiguration() {
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [carouselDir, setCarouselDir] = useState("next");
+
+  useEffect(() => {
+    track("wall_configuration_view");
+  }, []);
 
   useEffect(() => {
     if (!activeSpace?._id) return;
@@ -80,6 +85,7 @@ export default function WallConfiguration() {
 
 
   const handleSaveAndContinue = async () => {
+    track("wall_configuration_saved");
     setSaving(true);
     try {
       await api.patch(`/workspace/${activeSpace._id}/wall`, {
@@ -219,7 +225,11 @@ export default function WallConfiguration() {
                         {previewTestimonials.length > 1 && (
                           <div className="flex items-center justify-center gap-4 mt-5">
                             <button
-                              onClick={() => { setCarouselDir('prev'); setCarouselIdx(i => (i - 1 + previewTestimonials.length) % previewTestimonials.length); }}
+                              onClick={() => { 
+                                track("wall_configuration_preview_carousel_click", { arrow: "prev" });
+                                setCarouselDir('prev'); 
+                                setCarouselIdx(i => (i - 1 + previewTestimonials.length) % previewTestimonials.length); 
+                              }}
                               className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer border-0 ${arrowColor === 'white' ? 'bg-white text-black' : arrowColor === 'yellow' ? 'bg-[#F59E0B] text-black' : 'border border-[#444] bg-transparent text-white'}`}
                             >
                               ‹
@@ -228,14 +238,22 @@ export default function WallConfiguration() {
                               {previewTestimonials.map((_, i) => (
                                 <div
                                   key={i}
-                                  onClick={() => { setCarouselDir(i > carouselIdx ? 'next' : 'prev'); setCarouselIdx(i); }}
+                                  onClick={() => {
+                      track("wall_configuration_preview_carousel_click", { dot: i });
+                      setCarouselDir(i > carouselIdx ? 'next' : 'prev'); 
+                      setCarouselIdx(i); 
+                    }}
                                   className="cursor-pointer transition-all duration-300 rounded-full"
                                   style={{ width: i === carouselIdx ? '18px' : '8px', height: '8px', background: i === carouselIdx ? (darkTheme ? '#fff' : '#111') : (darkTheme ? '#333' : '#ccc') }}
                                 />
                               ))}
                             </div>
                             <button
-                              onClick={() => { setCarouselDir('next'); setCarouselIdx(i => (i + 1) % previewTestimonials.length); }}
+                              onClick={() => { 
+                                track("wall_configuration_preview_carousel_click", { arrow: "next" });
+                                setCarouselDir('next'); 
+                                setCarouselIdx(i => (i + 1) % previewTestimonials.length); 
+                              }}
                               className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer border-0 ${arrowColor === 'white' ? 'bg-white text-black' : arrowColor === 'yellow' ? 'bg-[#F59E0B] text-black' : 'border border-[#444] bg-transparent text-white'}`}
                             >
                               ›

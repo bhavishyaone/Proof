@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Inbox, Heart, Edit, Share2, Copy, Check, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 import api from "../lib/api";
 
 export default function EmbedCode() {
@@ -16,6 +17,10 @@ export default function EmbedCode() {
   const [wall, setWall] = useState(null);
   const [testimonials, setTestimonials] = useState([]);
   const [embedCode, setEmbedCode] = useState("");
+
+  useEffect(() => {
+    track("embed_code_view");
+  }, []);
 
   useEffect(() => {
     if (!activeSpace?._id) return;
@@ -109,6 +114,7 @@ export default function EmbedCode() {
   );
 
   const handleCopy = () => {
+    track("embed_code_copied");
     navigator.clipboard.writeText(embedCode).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
@@ -135,7 +141,11 @@ export default function EmbedCode() {
             <Link to="/inbox" className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#1A1A1A] rounded-xl text-[15px] font-semibold transition-colors">
               <Inbox className="w-[18px] h-[18px]" /> Inbox
             </Link>
-            <Link to="/wall-of-love" className="w-full flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] text-white rounded-xl text-[15px] font-semibold transition-colors">
+            <Link 
+              to="/wall-of-love" 
+              onClick={() => track("embed_code_back_click")}
+              className="w-full flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] text-white rounded-xl text-[15px] font-semibold transition-colors"
+            >
               <Heart className="w-[18px] h-[18px]" /> Wall of Love
             </Link>
           </nav>

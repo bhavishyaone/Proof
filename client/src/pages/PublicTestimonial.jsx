@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import VideoRecordingModal from "./VideoRecordingModal.jsx";
 import TextTestimonialModal from "./TextTestimonialModal.jsx";
+import { track } from "../analytics.jsx";
 
 export default function PublicTestimonial() {
   const { spaceSlug } = useParams();
@@ -17,6 +18,7 @@ export default function PublicTestimonial() {
   const [isTextModalOpen, setIsTextModalOpen] = useState(false);
 
   useEffect(() => {
+    track("public_testimonial_page_view", { spaceSlug });
     const fetchSpace = async () => {
       try {
         const res = await axios.get(
@@ -49,7 +51,7 @@ export default function PublicTestimonial() {
         <h1 className="text-6xl font-extrabold tracking-tight">404</h1>
         <p className="text-gray-400 text-lg">This space doesn&apos;t exist or has been removed.</p>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => { track("public_testimonial_404_go_home"); navigate("/"); }}
           className="mt-4 text-sm text-gray-500 hover:text-white underline underline-offset-4 transition-colors"
         >
           Go home
@@ -118,7 +120,7 @@ export default function PublicTestimonial() {
         <div className="w-full space-y-3">
           {space.collectionType !== "text" && (
             <Button
-              onClick={() => setIsVideoModalOpen(true)}
+              onClick={() => { track("record_video_click", { spaceSlug }); setIsVideoModalOpen(true); }}
               className={`w-full text-base font-bold py-6 rounded-lg transition-transform hover:scale-[1.01] flex items-center justify-center gap-3 ${theme === "dark" ? "bg-white hover:bg-gray-100 text-black" : "bg-[#5D5FEF] hover:bg-[#4F51D6] text-white"}`}
             >
               <Video className="w-5 h-5" /> Record a video
@@ -127,7 +129,7 @@ export default function PublicTestimonial() {
           {space.collectionType !== "video" && (
             <Button
               variant="outline"
-              onClick={() => setIsTextModalOpen(true)}
+              onClick={() => { track("send_text_click", { spaceSlug }); setIsTextModalOpen(true); }}
               className={`w-full border text-base font-bold py-6 rounded-lg transition-colors flex items-center justify-center gap-3 ${theme === "dark" ? "bg-[#151515] hover:bg-[#222222] border-[#333333] text-white hover:text-white" : "bg-white hover:bg-gray-50 border-gray-200 text-gray-900 hover:text-gray-900"}`}
             >
               <Edit3 className={`w-5 h-5 ${theme === "dark" ? "text-[#888]" : "text-gray-500"}`} /> Send in text

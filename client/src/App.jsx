@@ -1,5 +1,6 @@
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { SpaceProvider } from "./context/SpaceContext.jsx";
+import { AnalyticsProvider } from "./analytics.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
@@ -24,31 +25,33 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 const App = () => {
   return (
     <AuthProvider>
-      <SpaceProvider>
-        <Router>
-          <Routes>
+      <AnalyticsProvider>
+        <SpaceProvider>
+          <Router>
+            <Routes>
 
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/thank-you" element={<ThankYou />} />
-            <Route path="/embed/:wallId" element={<EmbedWall />} />
-            <Route path="/:spaceSlug" element={<PublicTestimonial />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/thank-you" element={<ThankYou />} />
+              <Route path="/embed/:wallId" element={<EmbedWall />} />
+              <Route path="/:spaceSlug" element={<PublicTestimonial />} />
 
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/create-space" element={<ProtectedRoute><CreateSpaceModal onClose={() => window.history.back()} /></ProtectedRoute>} />
-            <Route path="/edit-space" element={<ProtectedRoute><EditSpace /></ProtectedRoute>} />
-            <Route path="/space-success" element={<ProtectedRoute><SpaceSuccessModal /></ProtectedRoute>} />
-            <Route path="/inbox" element={<ProtectedRoute><SpaceInbox /></ProtectedRoute>} />
-            <Route path="/wall-of-love" element={<ProtectedRoute><WallOfLove /></ProtectedRoute>} />
-            <Route path="/wall-configuration" element={<ProtectedRoute><WallConfiguration /></ProtectedRoute>} />
-            <Route path="/embed-code" element={<ProtectedRoute><EmbedCode /></ProtectedRoute>} />
-            <Route path="/share" element={<ProtectedRoute><ShareLink /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/create-space" element={<ProtectedRoute><CreateSpaceModal onClose={() => window.history.back()} /></ProtectedRoute>} />
+              <Route path="/edit-space" element={<ProtectedRoute><EditSpace /></ProtectedRoute>} />
+              <Route path="/space-success" element={<ProtectedRoute><SpaceSuccessModal /></ProtectedRoute>} />
+              <Route path="/inbox" element={<ProtectedRoute><SpaceInbox /></ProtectedRoute>} />
+              <Route path="/wall-of-love" element={<ProtectedRoute><WallOfLove /></ProtectedRoute>} />
+              <Route path="/wall-configuration" element={<ProtectedRoute><WallConfiguration /></ProtectedRoute>} />
+              <Route path="/embed-code" element={<ProtectedRoute><EmbedCode /></ProtectedRoute>} />
+              <Route path="/share" element={<ProtectedRoute><ShareLink /></ProtectedRoute>} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </SpaceProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </SpaceProvider>
+      </AnalyticsProvider>
     </AuthProvider>
   )
 }

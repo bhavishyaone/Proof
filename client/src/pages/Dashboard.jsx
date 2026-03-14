@@ -3,6 +3,7 @@ import { Plus, Search, ChevronDown, Loader2, MoreVertical, Trash2 } from "lucide
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 import api from "../lib/api";
 
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export default function Dashboard() {
   const [approvedCount, setApprovedCount] = useState(null);
 
   useEffect(() => {
+    track("dashboard_view");
     const fetchSpaces = async () => {
       try {
         const res = await api.get("/workspace");
@@ -62,12 +64,14 @@ export default function Dashboard() {
   }, []);
 
   const handleLogout = () => {
+    track("user_logout");
     logout();
     navigate("/login", { replace: true });
   };
 
 
   const handleSelectSpace = (space) => {
+    track("space_selected", { spaceId: space._id, spaceName: space.name });
     selectSpace(space);
     navigate("/inbox");
   };
@@ -81,6 +85,7 @@ export default function Dashboard() {
     setDeletingSpaceId(spaceId);
     try {
       await api.delete(`/workspace/${spaceId}`);
+      track("space_deleted", { spaceId });
       setSpaces((prev) => prev.filter((s) => s._id !== spaceId));
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete space.");
@@ -167,7 +172,7 @@ export default function Dashboard() {
                 className="pl-9 bg-[#111111] border-[#2A2A2A] text-white placeholder:text-[#6B6B6B] focus-visible:ring-0 focus-visible:border-white transition-colors duration-150 rounded-lg w-full md:w-64 h-10"
               />
             </div>
-            <Link to="/create-space">
+            <Link to="/create-space" onClick={() => track("create_space_click")}>
               <Button className="bg-white text-black hover:bg-gray-100 font-semibold h-10 px-4 rounded-lg flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 Create a new space
@@ -183,7 +188,7 @@ export default function Dashboard() {
         ) : filteredSpaces.length === 0 ? (
           <div className="flex-1 flex items-center justify-center mt-8 mb-16">
             <div className="w-full max-w-2xl border-2 border-dashed border-[#2A2A2A] rounded-2xl p-16 flex flex-col items-center justify-center text-center bg-[#0A0A0A]">
-              <Link to="/create-space" className="w-12 h-12 rounded-full bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center mb-6 hover:bg-[#222] transition-colors group">
+              <Link to="/create-space" onClick={() => track("create_space_click_empty_state")} className="w-12 h-12 rounded-full bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center mb-6 hover:bg-[#222] transition-colors group">
                 <Plus className="w-5 h-5 text-[#6B6B6B] group-hover:text-white transition-colors" />
               </Link>
               <h3 className="text-lg font-semibold text-white mb-2">Create new space</h3>

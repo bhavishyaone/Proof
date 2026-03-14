@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import api from "../lib/api";
 import { SpaceContext } from "../context/SpaceContext";
+import { track } from "../analytics.jsx";
 
 const collectionTypeMap = {
   both: "Text and video",
@@ -47,6 +48,10 @@ export default function EditSpace() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    track("edit_space_view");
+  }, []);
 
   useEffect(() => {
     if (activeSpace) {
@@ -86,11 +91,13 @@ export default function EditSpace() {
       const res = await api.patch(`/workspace/${activeSpace._id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      track("space_edited_success", { spaceId: activeSpace._id });
       selectSpace(res.data.workspace);
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 3000);
     } 
     catch (err) {
+      track("space_edited_error", { error: err.response?.data?.message || err.message });
       setError(err.response?.data?.message || "Failed to save changes.");
     } 
     finally {
@@ -332,7 +339,10 @@ export default function EditSpace() {
                   )}
 
                   <Button
-                    onClick={handleSave}
+                    onClick={() => {
+                  track("space_configuration_save_click", { spaceId: activeSpace._id });
+                  handleSave();
+                }}
                     disabled={submitting}
                     className="w-full bg-[#5D5FEF] hover:bg-[#4F51D6] text-white py-6 rounded-lg font-bold text-base shadow-lg shadow-indigo-500/20"
                   >

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import api from "../lib/api";
+import { track } from "../analytics.jsx";
 
 export default function EmbedWall() {
   const { wallId } = useParams();
@@ -10,6 +11,10 @@ export default function EmbedWall() {
   const [error, setError] = useState(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [carouselDir, setCarouselDir] = useState("next");
+
+  useEffect(() => {
+    track("embed_wall_view", { wallId });
+  }, [wallId]);
 
   useEffect(() => {
     const fetchWall = async () => {
@@ -170,9 +175,9 @@ export default function EmbedWall() {
 
 
   if (isCarousel) {
-    const prev = () => { setCarouselDir("prev"); setCarouselIndex((i) => (i - 1 + testimonials.length) % testimonials.length); };
-    const next = () => { setCarouselDir("next"); setCarouselIndex((i) => (i + 1) % testimonials.length); };
-    const dotTo = (i) => { setCarouselDir(i > carouselIndex ? "next" : "prev"); setCarouselIndex(i); };
+    const prev = () => { track("embed_carousel_prev", { wallId }); setCarouselDir("prev"); setCarouselIndex((i) => (i - 1 + testimonials.length) % testimonials.length); };
+    const next = () => { track("embed_carousel_next", { wallId }); setCarouselDir("next"); setCarouselIndex((i) => (i + 1) % testimonials.length); };
+    const dotTo = (i) => { track("embed_carousel_dot", { wallId, index: i }); setCarouselDir(i > carouselIndex ? "next" : "prev"); setCarouselIndex(i); };
 
     return (
       <div style={{ background: bg, minHeight: "100vh", padding: "40px 24px", fontFamily: "system-ui, sans-serif", boxSizing: "border-box", overflow: "hidden" }}>
@@ -256,6 +261,7 @@ export default function EmbedWall() {
         {showMoreButton && testimonials.length > 0 && (
           <div style={{ display: "flex", justifyContent: "center", marginTop: "32px" }}>
             <button
+              onClick={() => track("embed_load_more_click", { wallId })}
               style={{
                 padding: "10px 28px",
                 borderRadius: "10px",

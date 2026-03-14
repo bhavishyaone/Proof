@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Check, Package } from "lucide-react";
+import { track } from "../analytics.jsx";
 
 export default function ThankYou({ theme = "dark" }) {
+  useEffect(() => {
+    track("thank_you_page_view");
+  }, []);
+
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center p-4 font-sans relative overflow-hidden transition-colors duration-300 ${theme === "dark" ? "bg-[#0A0A0A]" : "bg-gray-50"}`}>
       
