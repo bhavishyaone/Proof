@@ -15,7 +15,7 @@ export function AnalyticsProvider({ children }) {
 
   return (
     <>
-      <Analytiq apiKey={import.meta.env.VITE_ANALYTIQ_API_KEY} />
+      <Analytiq apiKey={import.meta.env.VITE_ANALYTIQ_KEY} />
       {children}
     </>
   )
