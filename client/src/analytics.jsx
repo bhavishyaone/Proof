@@ -6,8 +6,8 @@ export function AnalyticsProvider({ children }) {
   const { user } = useContext(AuthContext)
 
   useEffect(() => {
-    if (user && user._id) {
-      identify(user._id)
+    if (user) {
+      identify(user) 
     } else {
       reset()
     }
