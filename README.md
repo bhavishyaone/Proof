@@ -5,7 +5,7 @@
 **Turn your customers into your best marketing.** <br/>
 Collect video and text testimonials in minutes, manage everything in one place, and embed them anywhere.
 
-[Live Demo](#)
+[![LIVE DEMO](https://img.shields.io/badge/LIVE_DEMO-6E6E6E?style=for-the-badge&logo=vercel&logoColor=white)](https://proof-eight-phi.vercel.app/)
 
 </div>
 
