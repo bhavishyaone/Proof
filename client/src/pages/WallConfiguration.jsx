@@ -211,7 +211,7 @@ export default function WallConfiguration() {
                           @keyframes slideFromRight { from { opacity:0; transform:translateX(60px); } to { opacity:1; transform:translateX(0); } }
                           @keyframes slideFromLeft  { from { opacity:0; transform:translateX(-60px); } to { opacity:1; transform:translateX(0); } }
                         `}</style>
-                        {/* Animated card — key forces remount on index change */}
+                        
                         <div
                           key={carouselIdx}
                           style={{ animation: carouselDir === 'next' ? 'slideFromRight 0.32s ease-out both' : 'slideFromLeft 0.32s ease-out both' }}
