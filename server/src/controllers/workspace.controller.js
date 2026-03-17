@@ -33,12 +33,8 @@ const generateUniqueSlug = async()=>{
   return slug;
 }
 
-// Create Workspaces 
-
 export const createWorkSpaces = async(req,res)=>{
     try{
-        // console.log("REQ BODY", req.body);
-        // console.log("REQ FILE", req.file);
         const { name, headerTitle, customMessage, collectName, collectEmail, collectionType, allowStarRating, theme } = req.body;
 
         if(!name || !headerTitle || !customMessage){
@@ -56,8 +52,6 @@ export const createWorkSpaces = async(req,res)=>{
         }
 
         const slug = await generateUniqueSlug();
-        // console.log(slug)
-
         const workspace = await Workspace.create({
             name:name,
             logo: logoUrl,
@@ -79,8 +73,6 @@ export const createWorkSpaces = async(req,res)=>{
         return res.status(500).json({message:"server error."})
     }
 }
-
-// Get All the Spaces
 
 export const getWorkspaces = async(req,res)=>{
     try{
@@ -158,7 +150,6 @@ export const updateWorkspace = async(req,res)=>{
             return res.status(400).json({message:"customMessage must be at least 30 characters."})
         }
         
-        // Yaha pe Logo Update handle kiya hai 
         if (req.file) {
             const result = await uploadToCloundinary(req.file.buffer);
             updates.logo = result.secure_url;
@@ -179,7 +170,6 @@ export const updateWorkspace = async(req,res)=>{
     }
 };
 
-// Delete the Workspace 
 export const deleteWorkspace = async (req, res) => {
    try {
     const workspace = await Workspace.findById(req.params.id);

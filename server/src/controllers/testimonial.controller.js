@@ -2,8 +2,6 @@ import Testimonial from "../models/Testimonial.js";
 import Workspace from "../models/Workspace.js";
 import cloudinary from "../config/cloudinary.js";
 
-
-// get Testimonial for inbox 
 export const getTestimonial = async(req,res)=>{
     try{
         const workspace = await Workspace.findById(req.params.id)
@@ -46,8 +44,6 @@ export const getTestimonial = async(req,res)=>{
     }
 }    
 
-
-// Approve Testimonial 
 export const approveTestimonial  = async(req,res)=>{
     try{
         const testimonial = await Testimonial.findById(req.params.id)
@@ -74,8 +70,6 @@ export const approveTestimonial  = async(req,res)=>{
     }
 }
 
-
-// Reject the Testimonial 
 export const rejectTestimonial = async (req, res) => {
 
   try {
@@ -105,9 +99,6 @@ export const rejectTestimonial = async (req, res) => {
   }
 };
 
-
-
-// Like/Unlike the testimonial 
 export const likeTestimonial = async (req, res) => {
   try {
     const testimonial = await Testimonial.findById(req.params.id);
@@ -140,7 +131,6 @@ export const likeTestimonial = async (req, res) => {
   }
 };
 
-// Archive/Unarchive Testimonial
 export const archiveTestimonial = async (req, res) => {
   try {
 
@@ -174,8 +164,6 @@ export const archiveTestimonial = async (req, res) => {
   }
 };
 
-
-// Spam/Removefrom spam  the testomonial 
 export const markSpam = async (req, res) => {
 
   try {
@@ -209,8 +197,6 @@ export const markSpam = async (req, res) => {
   }
 };
 
-
-// Delete the testimonial 
 export const deleteTestimonial = async (req, res) => {
   try {
 

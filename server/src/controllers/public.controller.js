@@ -23,7 +23,6 @@ const uploadVideoToCloudinary = (buffer)=>{
     })
 };
 
-// Get Public Workspaces 
 export const getPublicWorkspace =  async(req,res)=>{
     try{
 
@@ -58,7 +57,6 @@ export const getPublicWorkspace =  async(req,res)=>{
     }
 }
 
-// Submit the testimonial
 export const submitTestimonial = async(req,res)=>{
     try{
 
