@@ -40,11 +40,6 @@ const wallOfLoveSchema = new mongoose.Schema(
       default: true
     },
 
-    showMoreButton: {
-      type: Boolean,
-      default: true
-    },
-
     oneRowSlider: {
       type: Boolean,
       default: true

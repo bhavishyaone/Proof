@@ -35,8 +35,7 @@ export default function EmbedCode() {
         const wallData = wallResult.status === "fulfilled" ? wallResult.value.data.wall : null;
         const testimonialData = testimonialResult.status === "fulfilled" ? testimonialResult.value.data.testimonials : [];
 
-        setWall(wallData);
-        setTestimonials(testimonialData?.slice(0, 3) || []);
+        setTestimonials(testimonialData || []);
 
         const origin = window.location.origin;
         if (wallData) {
@@ -224,7 +223,7 @@ export default function EmbedCode() {
                     )}
                     <div className="flex gap-3">
                       <div className="flex-1 space-y-3">
-                        {testimonials.slice(0, 2).map((t, i) =>
+                        {testimonials.filter((_, i) => i % 2 === 0).map((t, i) =>
                           renderCard(
                             t,
                             layout === "animated"
@@ -233,13 +232,13 @@ export default function EmbedCode() {
                           )
                         )}
                       </div>
-                      {testimonials.length > 2 && (
-                        <div className="flex-1 space-y-3 mt-4">
-                          {testimonials.slice(2, 3).map((t) =>
+                      {testimonials.length > 1 && (
+                        <div className="flex-1 space-y-3">
+                          {testimonials.filter((_, i) => i % 2 === 1).map((t, i) =>
                             renderCard(
                               t,
                               layout === "animated"
-                                ? { animation: "previewFloat 3s ease-in-out infinite", animationDelay: "0.4s" }
+                                ? { animation: "previewFloat 3s ease-in-out infinite", animationDelay: `${(i * 0.8) + 0.4}s` }
                                 : {}
                             )
                           )}

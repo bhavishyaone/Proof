@@ -18,7 +18,6 @@ export default function WallConfiguration() {
   const [hideDate, setHideDate] = useState(false);
   const [hideSourceIcons, setHideSourceIcons] = useState(false);
   const [minimizeImages, setMinimizeImages] = useState(false);
-  const [showMoreButton, setShowMoreButton] = useState(true);
   const [autoplay, setAutoplay] = useState(true);
   const [oneRowSlider, setOneRowSlider] = useState(false);
   const [sameHeightVideos, setSameHeightVideos] = useState(true);
@@ -40,7 +39,7 @@ export default function WallConfiguration() {
       setLoadingPreview(true);
       try {
         const res = await api.get(`/workspace/${activeSpace._id}/testimonials?status=approved`);
-        setPreviewTestimonials(res.data.testimonials?.slice(0, 3) || []);
+        setPreviewTestimonials(res.data.testimonials || []);
       } catch (_) {}
       finally { setLoadingPreview(false); }
     };
@@ -74,7 +73,6 @@ export default function WallConfiguration() {
         if (w.hideDate !== undefined) setHideDate(w.hideDate);
         if (w.hideSourceIcons !== undefined) setHideSourceIcons(w.hideSourceIcons);
         if (w.minimizeImages !== undefined) setMinimizeImages(w.minimizeImages);
-        if (w.showMoreButton !== undefined) setShowMoreButton(w.showMoreButton);
         if (w.autoplay !== undefined) setAutoplay(w.autoplay);
         if (w.oneRowSlider !== undefined) setOneRowSlider(w.oneRowSlider);
         if (w.sameHeightVideos !== undefined) setSameHeightVideos(w.sameHeightVideos);
@@ -95,7 +93,6 @@ export default function WallConfiguration() {
         hideDate,
         hideSourceIcons,
         minimizeImages,
-        showMoreButton,
         autoplay,
         oneRowSlider,
         sameHeightVideos,
@@ -265,31 +262,21 @@ export default function WallConfiguration() {
 
                       <div className="w-full max-w-lg flex items-start justify-center gap-6 pointer-events-none">
                         <style>{`@keyframes previewFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }`}</style>
-                        <div className="flex flex-col gap-6 flex-1 pt-12">
-                          {previewTestimonials.slice(0, 2).map((t, i) => renderCard(t, { animation: 'previewFloat 3s ease-in-out infinite', animationDelay: `${i * 0.8}s` }))}
+                        <div className="flex flex-col gap-6 flex-1">
+                          {previewTestimonials.filter((_, i) => i % 2 === 0).map((t, i) => renderCard(t, { animation: 'previewFloat 3s ease-in-out infinite', animationDelay: `${i * 0.8}s` }))}
                         </div>
                         <div className="flex flex-col gap-6 flex-1">
-                          {previewTestimonials.slice(2, 3).map((t) => renderCard(t, { animation: 'previewFloat 3s ease-in-out infinite', animationDelay: '0.4s' }))}
-                          {showMoreButton && (
-                            <div className="flex justify-center mt-2">
-                              <div className={`px-4 py-2 rounded-lg text-[10px] font-bold tracking-wide uppercase shadow-sm ${darkTheme ? 'bg-[#222] text-white' : 'bg-gray-200 text-gray-700'}`}>Load More</div>
-                            </div>
-                          )}
+                          {previewTestimonials.filter((_, i) => i % 2 === 1).map((t, i) => renderCard(t, { animation: 'previewFloat 3s ease-in-out infinite', animationDelay: `${(i * 0.8) + 0.4}s` }))}
                         </div>
                       </div>
                     ) : (
 
                       <div className="w-full max-w-lg flex items-start justify-center gap-6 pointer-events-none transition-all duration-300">
-                        <div className="flex flex-col gap-6 flex-1 pt-12">
-                          {previewTestimonials.slice(0, 2).map((t) => renderCard(t))}
+                        <div className="flex flex-col gap-6 flex-1">
+                          {previewTestimonials.filter((_, i) => i % 2 === 0).map((t) => renderCard(t))}
                         </div>
                         <div className="flex flex-col gap-6 flex-1">
-                          {previewTestimonials.slice(2, 3).map((t) => renderCard(t))}
-                          {showMoreButton && (
-                            <div className="flex justify-center mt-2">
-                              <div className={`px-4 py-2 rounded-lg text-[10px] font-bold tracking-wide uppercase shadow-sm ${darkTheme ? 'bg-[#222] text-white' : 'bg-gray-200 text-gray-700'}`}>Load More</div>
-                            </div>
-                          )}
+                          {previewTestimonials.filter((_, i) => i % 2 === 1).map((t) => renderCard(t))}
                         </div>
                       </div>
                     )}
@@ -334,7 +321,7 @@ export default function WallConfiguration() {
                         
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <span className="text-[14px] font-medium text-gray-200">Hide date</span>
+                                <span className="text-[14px] font-medium text-gray-200">Hide Time</span>
                                 <Switch checked={hideDate} onCheckedChange={setHideDate} className={switchClass} />
                             </div>
                             <div className="flex items-center justify-between">
@@ -345,12 +332,6 @@ export default function WallConfiguration() {
                                 <span className="text-[14px] font-medium text-gray-200">Minimize images</span>
                                 <Switch checked={minimizeImages} onCheckedChange={setMinimizeImages} className={switchClass} />
                             </div>
-                            {layout !== 'carousel' && (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[14px] font-medium text-gray-200">Show more button</span>
-                                    <Switch checked={showMoreButton} onCheckedChange={setShowMoreButton} className={switchClass} />
-                                </div>
-                            )}
                         </div>
                     </div>
 
