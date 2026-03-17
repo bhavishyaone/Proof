@@ -174,7 +174,7 @@ export default function EmbedCode() {
             </button>
 
             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-white mb-2">Your Wall of Love is Ready! 🎉</h1>
+              <h1 className="text-2xl font-bold text-white mb-2">Your Wall of Love is Ready! </h1>
               <p className="text-sm text-gray-400">Copy the code below and paste it on any website.</p>
             </div>
 

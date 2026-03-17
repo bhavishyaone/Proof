@@ -52,7 +52,7 @@ export default function SpaceSuccessModal() {
           <h2 className="text-white text-xl font-bold mb-2">
             Added {spaceName} successfully!
           </h2>
-          <div className="text-2xl mb-4">🎉</div>
+          <div className="text-2xl mb-4"></div>
           
           <p className="text-[#6B6B6B] text-sm mb-6">
             Here is the link for your customers:
