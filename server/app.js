@@ -22,7 +22,7 @@ app.use(cors({
 }))
 
 // Handle preflight requests for all routes
-app.options('*', cors({
+app.options('/(.*)', cors({
   origin: [
     'https://proof-night-phi.vercel.app',
     'http://localhost:5173',
