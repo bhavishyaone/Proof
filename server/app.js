@@ -11,7 +11,13 @@ import wallRoutes from './src/routes/wall.routes.js'
 
 const app  = express()
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    'https://proof-night-phi.vercel.app',
+    'http://localhost:5173',
+  ],
+  credentials: true,
+}))
 app.use(helmet({
   crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
 }))
