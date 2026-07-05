@@ -17,9 +17,24 @@ app.use(cors({
     'http://localhost:5173',
   ],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }))
+
+// Handle preflight requests for all routes
+app.options('*', cors({
+  origin: [
+    'https://proof-night-phi.vercel.app',
+    'http://localhost:5173',
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}))
+
 app.use(helmet({
-  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+  crossOriginResourcePolicy: false, // Allow cross-origin resource sharing
 }))
 app.use(express.json())
 
