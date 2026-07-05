@@ -11,20 +11,31 @@ import wallRoutes from './src/routes/wall.routes.js'
 
 const app  = express()
 
-app.use(cors({
-  origin: [
-    'https://proof-night-phi.vercel.app',
-    'http://localhost:5173',
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}))
+// Manual CORS headers — must be first, before all other middleware
+const ALLOWED_ORIGINS = [
+  'https://proof-night-phi.vercel.app',
+  'http://localhost:5173',
+];
 
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+  // Respond immediately to preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(helmet({
   crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
-  crossOriginResourcePolicy: false, // Allow cross-origin resource sharing
+  crossOriginResourcePolicy: false,
 }))
 app.use(express.json())
 
