@@ -13,7 +13,7 @@ const app  = express()
 
 // Manual CORS headers — must be first, before all other middleware
 const ALLOWED_ORIGINS = [
-  'https://proof-night-phi.vercel.app',
+  'https://proof-eight-phi.vercel.app',
   'http://localhost:5173',
 ];
 
